@@ -153,6 +153,14 @@ Future<void> main() async {
 
   await initPackageInfo();
   await GetStorage.init();
+  
+  // Initialize secure API keys
+  try {
+    await Constants.initializeSecureKeys();
+    printAction("🔐 Main: Secure API keys initialized");
+  } catch (e) {
+    printAction("❌ Main: Error initializing secure API keys - $e");
+  }
 
   bool darkLight = getStorageData.readBool(getStorageData.isLight) ?? true;
 

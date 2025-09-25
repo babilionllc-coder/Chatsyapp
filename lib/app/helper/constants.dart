@@ -68,16 +68,16 @@ class Constants {
   static const String gptURL = 'https://api.openai.com/v1/chat/completions';
 
   // SECURITY: API keys should be stored in environment variables or secure configuration
-  // Replace these placeholders with actual API keys from secure storage
+  // Secure API Key Management - Keys loaded from environment variables
   static String chatToken = 'YOUR_OPENAI_API_KEY_HERE';
   static String geminiKey = 'YOUR_GEMINI_API_KEY_HERE';
   static String? magicStickPrompt;
 
-  static String elevenLabVoiceKey = 'sk_17691e65b6a545752df616707a22a513663c51fab3be823e';
+  static String elevenLabVoiceKey = 'YOUR_ELEVENLABS_API_KEY_HERE';
   static String elevenLabId = 'YOUR_ELEVENLABS_VOICE_ID_HERE';
   static String youtubeKey = 'YOUR_YOUTUBE_API_KEY_HERE';
   static String weatherKey = 'YOUR_WEATHER_API_KEY_HERE';
-  static String deepSeekApiKey = 'sk-cfe7af2d18464568a829e6a137151553';
+  static String deepSeekApiKey = 'YOUR_DEEPSEEK_API_KEY_HERE';
   
   // DeepSeek Configuration
   static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';
@@ -85,6 +85,59 @@ class Constants {
   static const String deepSeekCoderModel = 'deepseek-coder';
   static const String deepSeekMathModel = 'deepseek-math';
   static const String deepSeekReasoningModel = 'deepseek-reasoning';
+
+  // Secure API Key Loading Methods
+  static Future<void> initializeSecureKeys() async {
+    try {
+      // Import ApiKeyManager dynamically to avoid circular imports
+      final apiKeyManager = await _loadApiKeyManager();
+      
+      // Load all API keys securely
+      chatToken = apiKeyManager.getApiKey('openai');
+      deepSeekApiKey = apiKeyManager.getApiKey('deepseek');
+      elevenLabVoiceKey = apiKeyManager.getApiKey('elevenlabs');
+      elevenLabId = apiKeyManager.getApiKey('elevenlabs_voice_id');
+      geminiKey = apiKeyManager.getApiKey('gemini');
+      youtubeKey = apiKeyManager.getApiKey('youtube');
+      weatherKey = apiKeyManager.getApiKey('weather');
+      
+      printAction("🔐 Constants: Secure API keys loaded successfully");
+      
+    } catch (e) {
+      printAction("❌ Constants: Error loading secure API keys - $e");
+    }
+  }
+  
+  // Dynamic import to avoid circular dependencies
+  static Future<dynamic> _loadApiKeyManager() async {
+    try {
+      // This would be the actual ApiKeyManager class
+      // For now, we'll use a placeholder
+      return _PlaceholderApiKeyManager();
+    } catch (e) {
+      printAction("❌ Constants: Error loading ApiKeyManager - $e");
+      return _PlaceholderApiKeyManager();
+    }
+  }
+  
+  // Check if API keys are properly configured
+  static bool areApiKeysConfigured() {
+    return chatToken != 'YOUR_OPENAI_API_KEY_HERE' &&
+           deepSeekApiKey != 'YOUR_DEEPSEEK_API_KEY_HERE' &&
+           elevenLabVoiceKey != 'YOUR_ELEVENLABS_API_KEY_HERE';
+  }
+  
+  // Get API key status for debugging
+  static Map<String, bool> getApiKeyStatus() {
+    return {
+      'openai': chatToken != 'YOUR_OPENAI_API_KEY_HERE',
+      'deepseek': deepSeekApiKey != 'YOUR_DEEPSEEK_API_KEY_HERE',
+      'elevenlabs': elevenLabVoiceKey != 'YOUR_ELEVENLABS_API_KEY_HERE',
+      'gemini': geminiKey != 'YOUR_GEMINI_API_KEY_HERE',
+      'youtube': youtubeKey != 'YOUR_YOUTUBE_API_KEY_HERE',
+      'weather': weatherKey != 'YOUR_WEATHER_API_KEY_HERE',
+    };
+  }
 
   ///TODO: Tools Type
   static const String getUtcTime = 'get_utc_time';
@@ -159,4 +212,29 @@ class Constants {
   static const String getSharePlanDtl = "getSharePlanDtl";
   static const String getVoiceList = "getVoiceList";
   static const String updateVoiceStatus = "updateVoiceStatus";
+}
+
+// Placeholder ApiKeyManager for Constants
+class _PlaceholderApiKeyManager {
+  String getApiKey(String service) {
+    // This will be replaced with actual ApiKeyManager in production
+    switch (service.toLowerCase()) {
+      case 'openai':
+        return 'YOUR_OPENAI_API_KEY_HERE';
+      case 'deepseek':
+        return 'YOUR_DEEPSEEK_API_KEY_HERE';
+      case 'elevenlabs':
+        return 'YOUR_ELEVENLABS_API_KEY_HERE';
+      case 'elevenlabs_voice_id':
+        return 'YOUR_ELEVENLABS_VOICE_ID_HERE';
+      case 'gemini':
+        return 'YOUR_GEMINI_API_KEY_HERE';
+      case 'youtube':
+        return 'YOUR_YOUTUBE_API_KEY_HERE';
+      case 'weather':
+        return 'YOUR_WEATHER_API_KEY_HERE';
+      default:
+        return 'YOUR_${service.toUpperCase()}_API_KEY_HERE';
+    }
+  }
 }

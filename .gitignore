@@ -47,3 +47,17 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+# Environment variables and sensitive data
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+secrets/
+config/secrets/
+
+# API Keys and sensitive configuration
+api_keys.json
+secrets.json
+config.json
