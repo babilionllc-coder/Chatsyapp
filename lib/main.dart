@@ -27,6 +27,7 @@ import 'app/helper/all_imports.dart';
 import 'app/helper/image_path.dart';
 import 'app/modules/splash/controllers/deep_link_service.dart';
 import 'app/routes/app_pages.dart';
+import 'app/common_widget/tutorial_overlay.dart';
 
 String version = "";
 
@@ -268,42 +269,44 @@ class _MyAppState extends State<MyApp> {
               child: any,
             );
           },
-          any: GetMaterialApp(
-            locale: Locale(Utils.languageCodeDefault, ''),
-            supportedLocales: const [
-              Locale(Utils.languageCodeEn, ''),
-              Locale(Utils.languageCodeEs, ''),
-              Locale(Utils.languageCodeHin, ''),
-              Locale(Utils.languageCodeFr, ''),
-              Locale(Utils.languageCodePor, ''),
-            ],
-            localizationsDelegates: [
-              AppLocalizationsDelegate(),
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            localeResolutionCallback: (locale, supportedLocales) {
-              for (var supportedLocale in supportedLocales) {
-                if (supportedLocale.languageCode == locale?.languageCode &&
-                    supportedLocale.countryCode == locale?.countryCode) {
-                  return supportedLocale;
+          any: TutorialOverlay(
+            child: GetMaterialApp(
+              locale: Locale(Utils.languageCodeDefault, ''),
+              supportedLocales: const [
+                Locale(Utils.languageCodeEn, ''),
+                Locale(Utils.languageCodeEs, ''),
+                Locale(Utils.languageCodeHin, ''),
+                Locale(Utils.languageCodeFr, ''),
+                Locale(Utils.languageCodePor, ''),
+              ],
+              localizationsDelegates: [
+                AppLocalizationsDelegate(),
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              localeResolutionCallback: (locale, supportedLocales) {
+                for (var supportedLocale in supportedLocales) {
+                  if (supportedLocale.languageCode == locale?.languageCode &&
+                      supportedLocale.countryCode == locale?.countryCode) {
+                    return supportedLocale;
+                  }
                 }
-              }
-              return supportedLocales.first;
-            },
-            debugShowCheckedModeBanner: false,
-            builder: EasyLoading.init(
-              builder: (context, child) {
-                return NewLoading(child: child!);
+                return supportedLocales.first;
               },
+              debugShowCheckedModeBanner: false,
+              builder: EasyLoading.init(
+                builder: (context, child) {
+                  return NewLoading(child: child!);
+                },
+              ),
+              initialRoute: AppPages.INITIAL,
+              getPages: AppPages.routes,
+              title: Constants.appName,
+              themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
+              theme: _themeData,
+              darkTheme: _darkThemeData,
             ),
-            initialRoute: AppPages.INITIAL,
-            getPages: AppPages.routes,
-            title: Constants.appName,
-            themeMode: isLight ? ThemeMode.light : ThemeMode.dark,
-            theme: _themeData,
-            darkTheme: _darkThemeData,
           ),
         );
       },
