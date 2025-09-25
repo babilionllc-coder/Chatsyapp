@@ -24,7 +24,7 @@ class ChatApi {
   RxString dataUser = "".obs;
 
   static String geminiModel = "gemini-1.5-pro";
-  static String tavilyApiKey = "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";
+  static String tavilyApiKey = "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";
 
   static String? gptTemperature;
 
@@ -705,6 +705,55 @@ NOTE:
                             );
                           }
                           break;
+                        case "deep_research":
+                          try {
+                            printAction(
+                              "Deep research query: ${element.args['query'].toString()}",
+                            );
+                            
+                            // Enhanced Tavily search for deep research
+                            final client = TavilyClient();
+                            final researchType = element.args['research_type']?.toString() ?? 'general';
+                            
+                            // Customize search based on research type
+                            String enhancedQuery = element.args['query'].toString();
+                            if (researchType == 'news') {
+                              enhancedQuery += " latest news breaking";
+                            } else if (researchType == 'academic') {
+                              enhancedQuery += " research study analysis";
+                            } else if (researchType == 'technical') {
+                              enhancedQuery += " technical documentation guide";
+                            } else if (researchType == 'business') {
+                              enhancedQuery += " business market analysis";
+                            }
+                            
+                            final res1 = await client.search(
+                              request: SearchRequest(
+                                apiKey: tavilyApiKey,
+                                query: enhancedQuery,
+                                maxResults: 10, // More results for deep research
+                                includeAnswer: true,
+                                includeImages: true,
+                                includeRawHtml: false,
+                                searchDepth: "advanced", // Deep search
+                              ),
+                            );
+
+                            tempContents.add(
+                              Content.functionResponse(element.name, {
+                                "Important Guidelines":
+                                    "Note: Always ensure that the content includes information about when it was fetched. By default, in your case, it should display the date using `${utils.todayDate()}`.",
+                                "research_type": researchType,
+                                "deep_research_result": res1,
+                                "analysis_instructions": "Provide comprehensive analysis, fact-checking, and multi-source synthesis of the research results.",
+                              }),
+                            );
+                          } catch (e) {
+                            printAction(
+                              "Deep research error $e",
+                            );
+                          }
+                          break;
                         case Constants.getWeather:
                           Map<String, Object>? map = await getCityWeather(
                             cityName: element.args['city_name'].toString(),
@@ -1013,13 +1062,13 @@ NOTE:
               type: ChatCompletionToolType.function,
               function: FunctionObject(
                 name: Constants.searchWithDuckduckgo,
-                description: "Search the web in real-time using DuckDuckGo for current news and information",
+                description: "Perform deep research using Tavily AI-powered search for comprehensive real-time information, news, and analysis",
                 parameters: {
                   "type": "object",
                   "properties": {
                     "query": {
                       "type": "string", 
-                      "description": "The search query to perform on DuckDuckGo for real-time results"
+                      "description": "The research query for deep analysis using Tavily's AI-powered search engine"
                     }
                   },
                   "required": ["query"]
@@ -1030,14 +1079,14 @@ NOTE:
               type: ChatCompletionToolType.function,
               function: FunctionObject(
                 name: Constants.googleSearch,
-                description: "Search the web in real-time using Google Search Engine for current information",
+                description: "Perform comprehensive web research using Tavily AI-powered search for real-time information, news, and deep analysis",
                 parameters: {
                   "type": "object",
                   "properties": {
                     "query": {
                       "type": "string",
                       "description":
-                          "The search query to perform on Google Search Engine for real-time results",
+                          "The research query for comprehensive analysis using Tavily's AI-powered search engine",
                     },
                   },
                   "required": ["query"],
@@ -1058,6 +1107,28 @@ NOTE:
                     },
                   },
                   // "required": ["query"],
+                },
+              ),
+            ),
+            const ChatCompletionTool(
+              type: ChatCompletionToolType.function,
+              function: FunctionObject(
+                name: "deep_research",
+                description: "Perform deep research using ChatGPT + Tavily for comprehensive analysis, fact-checking, and multi-source information gathering",
+                parameters: {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "description": "The research topic for deep analysis and comprehensive information gathering"
+                    },
+                    "research_type": {
+                      "type": "string",
+                      "description": "Type of research: 'news', 'academic', 'technical', 'business', 'general'",
+                      "enum": ["news", "academic", "technical", "business", "general"]
+                    }
+                  },
+                  "required": ["query"],
                 },
               ),
             ),
