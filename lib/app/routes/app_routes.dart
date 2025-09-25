@@ -55,6 +55,7 @@ abstract class Routes {
   static const SOCIAL_SCREEN = _Paths.SOCIAL_SCREEN;
   static const CREATE_AI_ASSISTANT = _Paths.CREATE_AI_ASSISTANT;
   static const AI_AGENT = _Paths.AI_AGENT;
+  static const DEPLOYMENT_AI = _Paths.DEPLOYMENT_AI;
 }
 
 abstract class _Paths {
@@ -108,4 +109,5 @@ abstract class _Paths {
   static const SOCIAL_SCREEN = '/social-screen';
   static const CREATE_AI_ASSISTANT = '/create-ai-assistant';
   static const AI_AGENT = '/ai-agent';
+  static const DEPLOYMENT_AI = '/deployment-ai';
 }
