@@ -78,6 +78,13 @@ class Constants {
   static String youtubeKey = 'YOUR_YOUTUBE_API_KEY_HERE';
   static String weatherKey = 'YOUR_WEATHER_API_KEY_HERE';
   static String deepSeekApiKey = 'sk-cfe7af2d18464568a829e6a137151553';
+  
+  // DeepSeek Configuration
+  static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';
+  static const String deepSeekChatModel = 'deepseek-chat';
+  static const String deepSeekCoderModel = 'deepseek-coder';
+  static const String deepSeekMathModel = 'deepseek-math';
+  static const String deepSeekReasoningModel = 'deepseek-reasoning';
 
   ///TODO: Tools Type
   static const String getUtcTime = 'get_utc_time';

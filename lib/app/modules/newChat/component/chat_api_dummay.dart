@@ -76,7 +76,7 @@ class ChatApi {
     }
   }
   
-  // DeepSeek API Integration
+  // Enhanced DeepSeek API Integration with Advanced Features
   static Future<void> deepSeekAPI({
     required String message,
     required ModelType modelType,
@@ -89,68 +89,301 @@ class ChatApi {
     String? fileText,
   }) async {
     try {
-      printAction("🤖 DeepSeek API: Starting request...");
+      printAction("🚀 DeepSeek API: Starting advanced request...");
       
-      // Prepare messages for DeepSeek
-      List<Map<String, dynamic>> messages = [];
+      // Determine optimal DeepSeek model based on content
+      String selectedModel = _selectOptimalDeepSeekModel(message, documentText);
+      printAction("🎯 DeepSeek: Selected model - $selectedModel");
       
-      if (!Utils().isValidationEmpty(systemText)) {
+      // Prepare enhanced messages for DeepSeek
+      List<Map<String, String>> messages = [];
+      
+      // Enhanced system prompt for DeepSeek
+      String enhancedSystemPrompt = _buildDeepSeekSystemPrompt(systemText, selectedModel);
+      
+      if (!Utils().isValidationEmpty(enhancedSystemPrompt)) {
         messages.add({
           "role": "system",
-          "content": systemText,
+          "content": enhancedSystemPrompt,
         });
       }
       
-      if (!Utils().isValidationEmpty(documentText)) {
-        messages.add({
-          "role": "user",
-          "content": "$message\n\nDocument Content:\n$documentText",
-        });
-      } else {
-        messages.add({
-          "role": "user",
-          "content": message,
-        });
-      }
+      // Enhanced user message with context
+      String enhancedMessage = _buildEnhancedUserMessage(message, documentText, selectedModel);
+      messages.add({
+        "role": "user",
+        "content": enhancedMessage,
+      });
       
-      // Make DeepSeek API call
-      final response = await http.post(
-        Uri.parse('https://api.deepseek.com/v1/chat/completions'),
-        headers: {
-          'Authorization': 'Bearer $deepSeekApiKey',
-          'Content-Type': 'application/json',
-        },
-        body: jsonEncode({
-          'model': 'deepseek-chat',
-          'messages': messages,
-          'max_tokens': maxTokens,
-          'temperature': double.parse(gptTemperature ?? defaultTemperature.toString()),
-          'stream': false,
-        }),
-      );
-      
-      if (response.statusCode == 200) {
-        final responseData = jsonDecode(response.body);
-        final content = responseData['choices'][0]['message']['content'];
-        
-        printAction("✅ DeepSeek API: Response received");
-        printAction("DeepSeek Response: $content");
-        
-        // Add response to chat
-        if (chatGPTAddData != null) {
-          chatGPTAddData.add(ChatCompletionMessage(
-            role: ChatCompletionMessageRole.assistant,
-            content: content,
-          ));
-        }
-        
+      // Use DeepSeek streaming for real-time responses
+      if (isRealTime == true) {
+        await _handleDeepSeekStreaming(messages, selectedModel, chatGPTAddData);
       } else {
-        printAction("❌ DeepSeek API: Error ${response.statusCode}");
-        printAction("DeepSeek Error: ${response.body}");
+        await _handleDeepSeekNonStreaming(messages, selectedModel, chatGPTAddData);
       }
       
     } catch (e) {
       printAction("❌ DeepSeek API: Exception - $e");
+    }
+  }
+  
+  // Select optimal DeepSeek model based on content
+  static String _selectOptimalDeepSeekModel(String message, String? documentText) {
+    String content = (message + (documentText ?? "")).toLowerCase();
+    
+    // Code-related content
+    if (content.contains('code') || content.contains('function') || 
+        content.contains('class') || content.contains('import') ||
+        content.contains('dart') || content.contains('flutter')) {
+      return Constants.deepSeekCoderModel;
+    }
+    
+    // Math-related content
+    if (content.contains('calculate') || content.contains('solve') ||
+        content.contains('equation') || content.contains('math') ||
+        content.contains('formula') || content.contains('algebra')) {
+      return Constants.deepSeekMathModel;
+    }
+    
+    // Complex reasoning content
+    if (content.contains('analyze') || content.contains('reasoning') ||
+        content.contains('logic') || content.contains('explain') ||
+        content.contains('why') || content.contains('how')) {
+      return Constants.deepSeekReasoningModel;
+    }
+    
+    // Default to chat model
+    return Constants.deepSeekChatModel;
+  }
+  
+  // Build enhanced system prompt for DeepSeek
+  static String _buildDeepSeekSystemPrompt(String? systemText, String model) {
+    String basePrompt = systemText ?? "";
+    
+    String modelSpecificPrompt = "";
+    switch (model) {
+      case Constants.deepSeekCoderModel:
+        modelSpecificPrompt = """
+You are an expert software developer with deep knowledge of multiple programming languages. 
+Your responses should be:
+- Clean, efficient, and well-commented code
+- Following best practices and design patterns
+- Optimized for performance and readability
+- Include error handling and edge cases
+- Provide explanations for complex logic
+""";
+        break;
+      case Constants.deepSeekMathModel:
+        modelSpecificPrompt = """
+You are an expert mathematician and problem solver. 
+Your responses should be:
+- Step-by-step solutions with clear explanations
+- Show all calculations and reasoning
+- Provide multiple solution approaches when applicable
+- Verify answers and explain the methodology
+- Use proper mathematical notation
+""";
+        break;
+      case Constants.deepSeekReasoningModel:
+        modelSpecificPrompt = """
+You are an expert in logical reasoning and critical thinking. 
+Your responses should be:
+- Clear, logical, and well-structured analysis
+- Step-by-step reasoning with evidence
+- Consider multiple perspectives and possibilities
+- Provide balanced and objective analysis
+- Draw clear conclusions based on evidence
+""";
+        break;
+      default:
+        modelSpecificPrompt = """
+You are an advanced AI assistant powered by DeepSeek. 
+Your responses should be:
+- Accurate, helpful, and comprehensive
+- Well-structured and easy to understand
+- Provide actionable insights and recommendations
+- Maintain professional and friendly tone
+- Include relevant examples and context
+""";
+    }
+    
+    return "$basePrompt\n\n$modelSpecificPrompt";
+  }
+  
+  // Build enhanced user message with context
+  static String _buildEnhancedUserMessage(String message, String? documentText, String model) {
+    String enhancedMessage = message;
+    
+    // Add context based on model type
+    switch (model) {
+      case Constants.deepSeekCoderModel:
+        if (!Utils().isValidationEmpty(documentText)) {
+          enhancedMessage += "\n\nCode Context:\n$documentText";
+        }
+        break;
+      case Constants.deepSeekMathModel:
+        if (!Utils().isValidationEmpty(documentText)) {
+          enhancedMessage += "\n\nMathematical Context:\n$documentText";
+        }
+        break;
+      case Constants.deepSeekReasoningModel:
+        if (!Utils().isValidationEmpty(documentText)) {
+          enhancedMessage += "\n\nAnalysis Context:\n$documentText";
+        }
+        break;
+      default:
+        if (!Utils().isValidationEmpty(documentText)) {
+          enhancedMessage += "\n\nAdditional Context:\n$documentText";
+        }
+    }
+    
+    return enhancedMessage;
+  }
+  
+  // Handle DeepSeek streaming responses
+  static Future<void> _handleDeepSeekStreaming(
+    List<Map<String, String>> messages,
+    String model,
+    List<ChatCompletionMessage>? chatGPTAddData,
+  ) async {
+    try {
+      printAction("🌊 DeepSeek: Starting streaming response...");
+      
+      StringBuffer fullResponse = StringBuffer();
+      
+      await for (String chunk in DeepSeekService.streamChatCompletion(
+        messages: messages,
+        model: model,
+        temperature: double.parse(gptTemperature ?? defaultTemperature.toString()),
+        maxTokens: maxTokens,
+        topP: topP,
+        frequencyPenalty: frequencyPenalty,
+        presencePenalty: presencePenalty,
+        stream: true,
+      )) {
+        fullResponse.write(chunk);
+        
+        // Add chunk to chat in real-time
+        if (chatGPTAddData != null && chatGPTAddData.isNotEmpty) {
+          // Update the last message with streaming content
+          final lastMessage = chatGPTAddData.last;
+          if (lastMessage.role == ChatCompletionMessageRole.assistant) {
+            chatGPTAddData[chatGPTAddData.length - 1] = ChatCompletionMessage(
+              role: ChatCompletionMessageRole.assistant,
+              content: fullResponse.toString(),
+            );
+          } else {
+            chatGPTAddData.add(ChatCompletionMessage(
+              role: ChatCompletionMessageRole.assistant,
+              content: chunk,
+            ));
+          }
+        }
+      }
+      
+      printAction("✅ DeepSeek: Streaming completed - ${fullResponse.length} characters");
+      
+    } catch (e) {
+      printAction("❌ DeepSeek: Streaming error - $e");
+    }
+  }
+  
+  // Handle DeepSeek non-streaming responses
+  static Future<void> _handleDeepSeekNonStreaming(
+    List<Map<String, String>> messages,
+    String model,
+    List<ChatCompletionMessage>? chatGPTAddData,
+  ) async {
+    try {
+      printAction("📝 DeepSeek: Starting non-streaming response...");
+      
+      String fullResponse = "";
+      
+      await for (String chunk in DeepSeekService.streamChatCompletion(
+        messages: messages,
+        model: model,
+        temperature: double.parse(gptTemperature ?? defaultTemperature.toString()),
+        maxTokens: maxTokens,
+        topP: topP,
+        frequencyPenalty: frequencyPenalty,
+        presencePenalty: presencePenalty,
+        stream: false,
+      )) {
+        fullResponse += chunk;
+      }
+      
+      printAction("✅ DeepSeek: Non-streaming completed - ${fullResponse.length} characters");
+      
+      // Add complete response to chat
+      if (chatGPTAddData != null) {
+        chatGPTAddData.add(ChatCompletionMessage(
+          role: ChatCompletionMessageRole.assistant,
+          content: fullResponse,
+        ));
+      }
+      
+    } catch (e) {
+      printAction("❌ DeepSeek: Non-streaming error - $e");
+    }
+  }
+  
+  // DeepSeek Function Calling Integration
+  static Future<void> deepSeekWithTools({
+    required String message,
+    required List<Map<String, dynamic>> tools,
+    String? systemText,
+    String? documentText,
+    List<ChatCompletionMessage>? chatGPTAddData,
+  }) async {
+    try {
+      printAction("🔧 DeepSeek: Starting function calling...");
+      
+      List<Map<String, String>> messages = [];
+      
+      if (!Utils().isValidationEmpty(systemText)) {
+        messages.add({
+          "role": "system",
+          "content": systemText!,
+        });
+      }
+      
+      String userMessage = message;
+      if (!Utils().isValidationEmpty(documentText)) {
+        userMessage += "\n\nContext:\n$documentText";
+      }
+      
+      messages.add({
+        "role": "user",
+        "content": userMessage,
+      });
+      
+      final result = await DeepSeekService.chatWithTools(
+        messages: messages,
+        tools: tools,
+        model: Constants.deepSeekChatModel,
+        temperature: double.parse(gptTemperature ?? defaultTemperature.toString()),
+        maxTokens: maxTokens,
+      );
+      
+      if (result.containsKey('error')) {
+        printAction("❌ DeepSeek: Function calling error - ${result['error']}");
+      } else {
+        printAction("✅ DeepSeek: Function calling completed successfully");
+        
+        // Process the result and add to chat
+        if (chatGPTAddData != null) {
+          final content = result['choices']?[0]?['message']?['content'];
+          if (content != null) {
+            chatGPTAddData.add(ChatCompletionMessage(
+              role: ChatCompletionMessageRole.assistant,
+              content: content,
+            ));
+          }
+        }
+      }
+      
+    } catch (e) {
+      printAction("❌ DeepSeek: Function calling exception - $e");
     }
   }
 

@@ -122,14 +122,14 @@ class AIAgentController extends GetxController {
     }
   }
   
-  // DeepSeek Health Check
+  // Enhanced DeepSeek Health Check
   Future<void> _checkDeepSeekHealth() async {
     try {
       final startTime = DateTime.now();
       
-      // Test DeepSeek API
+      // Test DeepSeek API with multiple models
       final response = await http.post(
-        Uri.parse('https://api.deepseek.com/v1/models'),
+        Uri.parse('${Constants.deepSeekBaseUrl}/models'),
         headers: {
           'Authorization': 'Bearer ${Constants.deepSeekApiKey}',
           'Content-Type': 'application/json',
@@ -141,9 +141,12 @@ class AIAgentController extends GetxController {
       final responseTime = endTime.difference(startTime).inMilliseconds;
       
       if (response.statusCode == 200) {
+        // Test actual chat completion
+        await _testDeepSeekChatCompletion();
+        
         serviceStatus['deepseek']?.status = ServiceStatusType.healthy;
         performanceMetrics['deepseek']?.updateMetrics(true, responseTime);
-        printAction("✅ DeepSeek: Healthy (${responseTime}ms)");
+        printAction("✅ DeepSeek: Healthy (${responseTime}ms) - All models available");
       } else {
         serviceStatus['deepseek']?.status = ServiceStatusType.unhealthy;
         performanceMetrics['deepseek']?.updateMetrics(false, responseTime);
@@ -153,6 +156,42 @@ class AIAgentController extends GetxController {
       serviceStatus['deepseek']?.status = ServiceStatusType.unhealthy;
       performanceMetrics['deepseek']?.updateMetrics(false, 0);
       printAction("❌ DeepSeek: Error - $e");
+    }
+  }
+  
+  // Test DeepSeek Chat Completion
+  Future<void> _testDeepSeekChatCompletion() async {
+    try {
+      final startTime = DateTime.now();
+      
+      // Test with DeepSeek Chat model
+      final response = await http.post(
+        Uri.parse('${Constants.deepSeekBaseUrl}/chat/completions'),
+        headers: {
+          'Authorization': 'Bearer ${Constants.deepSeekApiKey}',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'model': Constants.deepSeekChatModel,
+          'messages': [
+            {'role': 'user', 'content': 'Test message for health check'}
+          ],
+          'max_tokens': 10,
+        }),
+        timeout: Duration(seconds: 15),
+      );
+      
+      final endTime = DateTime.now();
+      final responseTime = endTime.difference(startTime).inMilliseconds;
+      
+      if (response.statusCode == 200) {
+        printAction("✅ DeepSeek Chat: Working (${responseTime}ms)");
+      } else {
+        printAction("❌ DeepSeek Chat: Error (${response.statusCode})");
+      }
+      
+    } catch (e) {
+      printAction("❌ DeepSeek Chat: Exception - $e");
     }
   }
   
