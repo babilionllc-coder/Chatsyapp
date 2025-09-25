@@ -1,0 +1,103 @@
+{
+  "project_info": {
+    "project_number": "50566955447",
+    "project_id": "ai-chatsy-390411",
+    "storage_bucket": "ai-chatsy-390411.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50566955447:android:3c01e936822367bcb56832",
+        "android_client_info": {
+          "package_name": "com.aichatsy.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "50566955447-1pul6uh8jdggapf1d71kclhdmk6lphpi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "2c2596f44bc7f59980963fe81bdcc634c458d53a"
+          }
+        },
+        {
+          "client_id": "50566955447-29203h98q0v5d9oemp66i3aophabnqsh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "330b829f6673efbd295d927e0ae09a571328d4ed"
+          }
+        },
+        {
+          "client_id": "50566955447-3ah9fa4nbj5iaf8rcvms7aooemgpo17s.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "d2e1392ad68dcecd40ab1e4dd79428accd7d0a97"
+          }
+        },
+        {
+          "client_id": "50566955447-l009lcepaqiait2r950gto2a2blbpjv9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "93b58c9db2b8a45bec04ed58ce89aa4fa2661d93"
+          }
+        },
+        {
+          "client_id": "50566955447-m22vprcar8f3drvcbrntp792s2oftlet.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "8bae6d67c9a9c6a630ad2645c0bd9085be2c7022"
+          }
+        },
+        {
+          "client_id": "50566955447-t3qo1k9v09vfiaiikc31upi41s40ka5j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "b9b30490815c21c2eb56e6f48285ff1c1721f434"
+          }
+        },
+        {
+          "client_id": "50566955447-vlodk0176gcj43oecf8skau2f9r8bbsq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aichatsy.app",
+            "certificate_hash": "898a32c56579c6c3c885308292f746cfe9f6df73"
+          }
+        },
+        {
+          "client_id": "50566955447-c2hd32bbu9rq1bqo71hqs8gcvg0ob7pg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvDf2cr_lqq4Y0sE3aLHj6HlQeuseCRJM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "50566955447-c2hd32bbu9rq1bqo71hqs8gcvg0ob7pg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "50566955447-hvcong6ledci8he7lsc3lcf6ujlnbkcd.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.aichatsy.app",
+                "app_store_id": "6449819419"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

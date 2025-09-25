@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<full-backup-content>
+    <!-- Include all shared preferences by default -->
+    <include domain="sharedpref" path="."/>
+    <!-- Exclude AppsFlyer sensitive data -->
+    <exclude domain="sharedpref" path="appsflyer-data"/>
+    <!-- Exclude billing-stats sensitive data (adjust path as needed) -->
+    <exclude domain="sharedpref" path="com.appvestor.billing-stats.xml"/>
+    <!-- Add other inclusions/exclusions based on your app’s needs -->
+</full-backup-content>
