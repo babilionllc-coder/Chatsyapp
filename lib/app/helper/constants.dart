@@ -73,7 +73,7 @@ class Constants {
   static String geminiKey = 'YOUR_GEMINI_API_KEY_HERE';
   static String? magicStickPrompt;
 
-  static String elevenLabVoiceKey = 'YOUR_ELEVENLABS_API_KEY_HERE';
+  static String elevenLabVoiceKey = 'sk_17691e65b6a545752df616707a22a513663c51fab3be823e';
   static String elevenLabId = 'YOUR_ELEVENLABS_VOICE_ID_HERE';
   static String youtubeKey = 'YOUR_YOUTUBE_API_KEY_HERE';
   static String weatherKey = 'YOUR_WEATHER_API_KEY_HERE';
