@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../helper/all_imports.dart';
 import '../modules/tutorial/controllers/tutorial_controller.dart';
 
@@ -92,7 +91,7 @@ class WhatsNewWidget extends StatelessWidget {
                             'Version 1.5.0 • ${controller.newFeaturesCount} new features',
                             style: TextStyle(
                               fontSize: 14.px,
-                              color: AppColors().darkAndWhite.changeOpacity(0.7),
+                              color: AppColors().darkAndWhite.withOpacity(0.7),
                             ),
                           ),
                         ],
@@ -101,7 +100,7 @@ class WhatsNewWidget extends StatelessWidget {
                     Icon(
                       Icons.arrow_forward_ios,
                       size: 16.px,
-                      color: AppColors().darkAndWhite.changeOpacity(0.5),
+                      color: AppColors().darkAndWhite.withOpacity(0.5),
                     ),
                   ],
                 ),
@@ -112,7 +111,7 @@ class WhatsNewWidget extends StatelessWidget {
                   'Discover GPT-5 integration, DeepSeek AI, and advanced AI agents!',
                   style: TextStyle(
                     fontSize: 14.px,
-                    color: AppColors().darkAndWhite.changeOpacity(0.8),
+                    color: AppColors().darkAndWhite.withOpacity(0.8),
                     height: 1.4,
                   ),
                 ),
@@ -318,7 +317,7 @@ class FeatureHighlightWidget extends StatelessWidget {
                       description,
                       style: TextStyle(
                         fontSize: 14.px,
-                        color: AppColors().darkAndWhite.changeOpacity(0.7),
+                        color: AppColors().darkAndWhite.withOpacity(0.7),
                       ),
                     ),
                   ],
@@ -327,7 +326,7 @@ class FeatureHighlightWidget extends StatelessWidget {
               Icon(
                 Icons.arrow_forward_ios,
                 size: 16.px,
-                color: AppColors().darkAndWhite.changeOpacity(0.5),
+                color: AppColors().darkAndWhite.withOpacity(0.5),
               ),
             ],
           ),

@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../../../helper/all_imports.dart';
 import '../controllers/tutorial_controller.dart';
 
@@ -44,7 +43,7 @@ class TutorialView extends StatelessWidget {
                 maxHeight: 600.px,
               ),
               decoration: BoxDecoration(
-                color: AppColors().backgroundColor,
+                color: AppColors().darkAndWhite,
                 borderRadius: BorderRadius.circular(20.px),
                 boxShadow: [
                   BoxShadow(
@@ -115,7 +114,7 @@ class TutorialView extends StatelessWidget {
                   currentStep.description,
                   style: TextStyle(
                     fontSize: 16.px,
-                    color: AppColors().darkAndWhite.changeOpacity(0.7),
+                    color: AppColors().darkAndWhite.withOpacity(0.7),
                     height: 1.5,
                   ),
                   textAlign: TextAlign.center,
@@ -180,7 +179,7 @@ class TutorialView extends StatelessWidget {
                 'Step ${controller.currentTutorialIndex.value + 1} of ${controller.tutorialSteps.length}',
                 style: TextStyle(
                   fontSize: 14.px,
-                  color: AppColors().darkAndWhite.changeOpacity(0.7),
+                  color: AppColors().darkAndWhite.withOpacity(0.7),
                 ),
               ),
               if (controller.canSkipTutorial.value)
@@ -208,10 +207,10 @@ class TutorialView extends StatelessWidget {
           margin: EdgeInsets.symmetric(vertical: 4.px),
           padding: EdgeInsets.symmetric(horizontal: 16.px, vertical: 12.px),
           decoration: BoxDecoration(
-            color: AppColors().darkAndWhite.changeOpacity(0.05),
+            color: AppColors().darkAndWhite.withOpacity(0.05),
             borderRadius: BorderRadius.circular(12.px),
             border: Border.all(
-              color: AppColors().darkAndWhite.changeOpacity(0.1),
+              color: AppColors().darkAndWhite.withOpacity(0.1),
             ),
           ),
           child: Row(
@@ -227,7 +226,7 @@ class TutorialView extends StatelessWidget {
                   feature,
                   style: TextStyle(
                     fontSize: 14.px,
-                    color: AppColors().darkAndWhite.changeOpacity(0.8),
+                    color: AppColors().darkAndWhite.withOpacity(0.8),
                   ),
                 ),
               ),
@@ -242,7 +241,7 @@ class TutorialView extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.px),
       decoration: BoxDecoration(
-        color: AppColors().darkAndWhite.changeOpacity(0.05),
+        color: AppColors().darkAndWhite.withOpacity(0.05),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20.px),
           bottomRight: Radius.circular(20.px),
@@ -257,7 +256,7 @@ class TutorialView extends StatelessWidget {
                 onPressed: () => controller.previousTutorialStep(),
                 style: OutlinedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 12.px),
-                  side: BorderSide(color: AppColors().darkAndWhite.changeOpacity(0.3)),
+                  side: BorderSide(color: AppColors().darkAndWhite.withOpacity(0.3)),
                 ),
                 child: Text('Previous'),
               ),
@@ -313,7 +312,7 @@ class TutorialView extends StatelessWidget {
                 maxHeight: 700.px,
               ),
               decoration: BoxDecoration(
-                color: AppColors().backgroundColor,
+                color: AppColors().darkAndWhite,
                 borderRadius: BorderRadius.circular(20.px),
                 boxShadow: [
                   BoxShadow(
@@ -379,7 +378,7 @@ class TutorialView extends StatelessWidget {
                   'Discover the latest features and improvements',
                   style: TextStyle(
                     fontSize: 16.px,
-                    color: AppColors().darkAndWhite.changeOpacity(0.7),
+                    color: AppColors().darkAndWhite.withOpacity(0.7),
                   ),
                   textAlign: TextAlign.center,
                 ),
@@ -431,7 +430,7 @@ class TutorialView extends StatelessWidget {
                   '${controller.newFeaturesCount} new features',
                   style: TextStyle(
                     fontSize: 14.px,
-                    color: AppColors().darkAndWhite.changeOpacity(0.7),
+                    color: AppColors().darkAndWhite.withOpacity(0.7),
                   ),
                 ),
               ],
@@ -441,7 +440,7 @@ class TutorialView extends StatelessWidget {
             onPressed: () => controller.hideWhatsNew(),
             icon: Icon(
               Icons.close,
-              color: AppColors().darkAndWhite.changeOpacity(0.7),
+              color: AppColors().darkAndWhite.withOpacity(0.7),
             ),
           ),
         ],
@@ -517,7 +516,7 @@ class TutorialView extends StatelessWidget {
                       item.subtitle,
                       style: TextStyle(
                         fontSize: 14.px,
-                        color: AppColors().darkAndWhite.changeOpacity(0.7),
+                        color: AppColors().darkAndWhite.withOpacity(0.7),
                       ),
                     ),
                   ],
@@ -532,7 +531,7 @@ class TutorialView extends StatelessWidget {
             item.description,
             style: TextStyle(
               fontSize: 14.px,
-              color: AppColors().darkAndWhite.changeOpacity(0.8),
+              color: AppColors().darkAndWhite.withOpacity(0.8),
               height: 1.4,
             ),
           ),
@@ -591,7 +590,7 @@ class TutorialView extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(20.px),
       decoration: BoxDecoration(
-        color: AppColors().darkAndWhite.changeOpacity(0.05),
+        color: AppColors().darkAndWhite.withOpacity(0.05),
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(20.px),
           bottomRight: Radius.circular(20.px),
@@ -604,7 +603,7 @@ class TutorialView extends StatelessWidget {
               onPressed: () => controller.hideWhatsNew(),
               style: OutlinedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 12.px),
-                side: BorderSide(color: AppColors().darkAndWhite.changeOpacity(0.3)),
+                side: BorderSide(color: AppColors().darkAndWhite.withOpacity(0.3)),
               ),
               child: Text('Maybe Later'),
             ),

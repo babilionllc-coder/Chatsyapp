@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import '../helper/all_imports.dart';
 import '../modules/tutorial/views/tutorial_view.dart';
 
