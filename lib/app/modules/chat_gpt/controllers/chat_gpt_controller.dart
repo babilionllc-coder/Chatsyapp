@@ -417,14 +417,14 @@ class ChatGptController extends GetxController {
     required void Function() onTap,
   }) {
     commonFirstTimeOpenBottomSheet(
-      modelList: [],
+      modelList: realTimeWeb,
       image: "",
       imageNetwork: model.logo,
       imagePath: ImagePath.webSiteImage,
       title: model.name ?? "",
-      buttonName: Languages.of(Get.context!)!.cancel,
-      subTitle: "Coming soon",
+      subTitle: Languages.of(Get.context!)!.accessesLiveInfoForRealTimeResponses,
       onTap: () {
+        getStorageData.saveBool(getStorageData.realTimeWeb, true);
         Get.back();
         onTap();
       },
@@ -1248,6 +1248,24 @@ class ChatGptController extends GetxController {
       title: Languages.of(Get.context!)!.advancedIntegration,
       subTitle: Languages.of(Get.context!)!.cuttingEdgeAIOptimization,
       image: ImagePath.advancedIntegration,
+    ),
+  ];
+
+  List<RxCommonModel> realTimeWeb = [
+    RxCommonModel(
+      title: Languages.of(Get.context!)!.realTimeUpdates,
+      subTitle: Languages.of(Get.context!)!.accessesLiveInfoForRealTimeResponses,
+      image: ImagePath.realTime,
+    ),
+    RxCommonModel(
+      title: Languages.of(Get.context!)!.enhancedUnderstanding,
+      subTitle: Languages.of(Get.context!)!.deliversMoreAccurateResponses,
+      image: ImagePath.enhanced,
+    ),
+    RxCommonModel(
+      title: Languages.of(Get.context!)!.creativeAssistance,
+      subTitle: Languages.of(Get.context!)!.generatesIdeasAndContentEffortlessly,
+      image: ImagePath.creative,
     ),
   ];
 

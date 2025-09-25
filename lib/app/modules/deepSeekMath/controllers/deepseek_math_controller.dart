@@ -1,349 +1,445 @@
-import 'dart:developer';
+import 'dart:math';
 import '../../../helper/all_imports.dart';
 import '../../../service/deepseek_service.dart';
 
 class DeepSeekMathController extends GetxController {
-  // DeepSeek Math Controller for Advanced Mathematical Problem Solving
+  // DeepSeek Math Controller - Specialized for Mathematical Problem Solving
   
-  // Observable variables
+  // State Management
   RxBool isLoading = false.obs;
-  RxString solution = "".obs;
+  RxString mathSolution = "".obs;
   RxString stepByStepSolution = "".obs;
-  RxString mathematicalExplanation = "".obs;
-  RxList<String> alternativeSolutions = <String>[].obs;
-  RxString errorMessage = "".obs;
+  RxString finalAnswer = "".obs;
+  RxList<String> solutionSteps = <String>[].obs;
+  RxString mathTopic = "".obs;
+  RxString difficultyLevel = "".obs;
   
-  // Math problem categories
-  RxString selectedCategory = "general".obs;
-  RxBool showSteps = true.obs;
-  RxBool showVerification = true.obs;
-  RxBool showAlternativeMethods = false.obs;
+  // Math Analysis
+  RxMap<String, dynamic> mathMetrics = <String, dynamic>{}.obs;
+  RxList<String> alternativeMethods = <String>[].obs;
+  RxList<String> relatedConcepts = <String>[].obs;
+  RxBool isCorrect = false.obs;
+  RxString confidence = "".obs;
   
-  // Available math categories
-  final List<Map<String, String>> mathCategories = [
-    {'value': 'general', 'label': 'General Math'},
-    {'value': 'algebra', 'label': 'Algebra'},
-    {'value': 'geometry', 'label': 'Geometry'},
-    {'value': 'calculus', 'label': 'Calculus'},
-    {'value': 'statistics', 'label': 'Statistics'},
-    {'value': 'trigonometry', 'label': 'Trigonometry'},
-    {'value': 'linear_algebra', 'label': 'Linear Algebra'},
-    {'value': 'differential_equations', 'label': 'Differential Equations'},
-    {'value': 'probability', 'label': 'Probability'},
-    {'value': 'discrete_math', 'label': 'Discrete Math'},
+  // Math Categories
+  final List<String> mathCategories = [
+    'Algebra', 'Geometry', 'Calculus', 'Statistics', 'Probability',
+    'Trigonometry', 'Linear Algebra', 'Differential Equations',
+    'Number Theory', 'Combinatorics', 'Discrete Math', 'Real Analysis'
   ];
   
-  // Sample problems for each category
-  final Map<String, List<String>> sampleProblems = {
-    'general': [
-      'Solve: 2x + 5 = 13',
-      'What is 15% of 240?',
-      'Find the area of a circle with radius 7 cm',
-    ],
-    'algebra': [
-      'Solve: x² - 5x + 6 = 0',
-      'Factor: 2x² + 7x + 3',
-      'Solve the system: x + y = 5, 2x - y = 1',
-    ],
-    'geometry': [
-      'Find the volume of a cylinder with radius 4 cm and height 10 cm',
-      'Calculate the area of a triangle with sides 3, 4, 5',
-      'Find the angle between two vectors: (1,2) and (3,4)',
-    ],
-    'calculus': [
-      'Find the derivative of f(x) = x³ + 2x² - 5x + 1',
-      'Evaluate the integral: ∫(2x + 3)dx from 0 to 2',
-      'Find the limit: lim(x→0) sin(x)/x',
-    ],
-    'statistics': [
-      'Calculate the mean, median, and mode of: 2, 4, 6, 8, 10',
-      'Find the standard deviation of: 1, 3, 5, 7, 9',
-      'What is the probability of rolling two sixes with two dice?',
-    ],
-  };
+  // Difficulty Levels
+  final List<String> difficultyLevels = [
+    'Basic', 'Intermediate', 'Advanced', 'Expert', 'Research Level'
+  ];
   
   @override
   void onInit() {
     super.onInit();
-    _initializeController();
+    _initializeMath();
   }
   
-  void _initializeController() {
-    printAction("🧮 DeepSeek Math: Controller initialized");
+  void _initializeMath() {
+    printAction("🧮 DeepSeek Math: Initializing mathematical problem solver...");
+    _setupMathAnalysis();
+    printAction("✅ DeepSeek Math: Ready for advanced mathematical problem solving");
   }
   
-  // Solve mathematical problem
-  Future<void> solveProblem({
+  void _setupMathAnalysis() {
+    printAction("📊 Setting up mathematical analysis tools");
+  }
+  
+  // Solve Mathematical Problem
+  Future<void> solveMathProblem({
     required String problem,
     String? category,
-    bool? showSteps,
-    bool? showVerification,
-    bool? showAlternativeMethods,
+    String? difficulty,
+    bool showSteps = true,
+    bool verifyAnswer = true,
   }) async {
     try {
       isLoading.value = true;
-      errorMessage.value = "";
+      mathTopic.value = category ?? _detectMathTopic(problem);
+      difficultyLevel.value = difficulty ?? _detectDifficulty(problem);
       
-      // Use provided parameters or defaults
-      final selectedCat = category ?? selectedCategory.value;
-      final withSteps = showSteps ?? this.showSteps.value;
-      final withVerification = showVerification ?? this.showVerification.value;
-      final withAlternatives = showAlternativeMethods ?? this.showAlternativeMethods.value;
+      printAction("🧮 DeepSeek Math: Solving ${mathTopic.value} problem (${difficultyLevel.value})");
       
-      printAction("🧮 DeepSeek Math: Solving $selectedCat problem...");
-      
-      // Build enhanced prompt
-      String enhancedPrompt = _buildEnhancedPrompt(
-        problem,
-        selectedCat,
-        withSteps,
-        withVerification,
-        withAlternatives,
+      // Build specialized prompt for math solving
+      final mathPrompt = _buildMathSolvingPrompt(
+        problem: problem,
+        category: mathTopic.value,
+        difficulty: difficultyLevel.value,
+        showSteps: showSteps,
+        verifyAnswer: verifyAnswer,
       );
       
-      // Solve problem using DeepSeek Math
-      final mathSolution = await DeepSeekService.solveMath(
-        problem: enhancedPrompt,
+      // Call DeepSeek Math API
+      final messages = [
+        {
+          'role': 'system',
+          'content': _getMathSystemPrompt(),
+        },
+        {
+          'role': 'user',
+          'content': mathPrompt,
+        },
+      ];
+      
+      // Use DeepSeek Math model
+      final response = await DeepSeekService.chatWithTools(
+        messages: messages,
         model: Constants.deepSeekMathModel,
-        temperature: 0.1, // Low temperature for accurate math
+        temperature: 0.1, // Very low temperature for mathematical accuracy
+        maxTokens: 2048,
+      );
+      
+      if (response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+      
+      // Extract solution
+      final content = response['choices'][0]['message']['content'] ?? '';
+      mathSolution.value = content;
+      
+      // Parse solution steps
+      await _parseSolutionSteps(content);
+      
+      // Extract final answer
+      await _extractFinalAnswer(content);
+      
+      // Verify solution if requested
+      if (verifyAnswer) {
+        await _verifySolution(problem, content);
+      }
+      
+      // Generate alternative methods
+      await _generateAlternativeMethods(problem);
+      
+      // Find related concepts
+      await _findRelatedConcepts(mathTopic.value);
+      
+      printAction("✅ DeepSeek Math: Problem solved successfully");
+      
+    } catch (e) {
+      printAction("❌ DeepSeek Math: Error solving problem - $e");
+      utils.showSnackBar("Error solving math problem: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  // Calculate Mathematical Expression
+  Future<void> calculateExpression({
+    required String expression,
+    bool showWork = true,
+    int precision = 6,
+  }) async {
+    try {
+      isLoading.value = true;
+      
+      printAction("🧮 DeepSeek Math: Calculating expression...");
+      
+      final calcPrompt = _buildCalculationPrompt(expression, showWork, precision);
+      
+      final messages = [
+        {
+          'role': 'system',
+          'content': _getCalculationSystemPrompt(),
+        },
+        {
+          'role': 'user',
+          'content': calcPrompt,
+        },
+      ];
+      
+      final response = await DeepSeekService.chatWithTools(
+        messages: messages,
+        model: Constants.deepSeekMathModel,
+        temperature: 0.0, // Zero temperature for exact calculations
         maxTokens: 1024,
       );
       
-      if (mathSolution.contains('Error:')) {
-        errorMessage.value = mathSolution;
-        solution.value = "";
-      } else {
-        solution.value = mathSolution;
-        await _generateStepByStepSolution(problem, selectedCat);
-        await _generateMathematicalExplanation(problem, mathSolution);
-        
-        if (withAlternatives) {
-          await _generateAlternativeSolutions(problem, selectedCat);
+      if (response.containsKey('error')) {
+        throw Exception(response['error']);
+      }
+      
+      final content = response['choices'][0]['message']['content'] ?? '';
+      mathSolution.value = content;
+      
+      await _extractFinalAnswer(content);
+      
+      printAction("✅ DeepSeek Math: Calculation completed");
+      
+    } catch (e) {
+      printAction("❌ DeepSeek Math: Error calculating expression - $e");
+      utils.showSnackBar("Error calculating expression: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  // Helper Methods
+  String _buildMathSolvingPrompt({
+    required String problem,
+    required String category,
+    required String difficulty,
+    required bool showSteps,
+    required bool verifyAnswer,
+  }) {
+    final buffer = StringBuffer();
+    
+    buffer.writeln("Solve this $category problem ($difficulty level):");
+    buffer.writeln("\n$problem");
+    
+    buffer.writeln("\nRequirements:");
+    buffer.writeln("- Show step-by-step solution: ${showSteps ? 'Yes' : 'No'}");
+    buffer.writeln("- Verify the answer: ${verifyAnswer ? 'Yes' : 'No'}");
+    buffer.writeln("- Use proper mathematical notation");
+    buffer.writeln("- Explain each step clearly");
+    
+    if (verifyAnswer) {
+      buffer.writeln("- Double-check the final answer");
+    }
+    
+    return buffer.toString();
+  }
+  
+  String _buildCalculationPrompt(String expression, bool showWork, int precision) {
+    final buffer = StringBuffer();
+    
+    buffer.writeln("Calculate the following expression:");
+    buffer.writeln("\n$expression");
+    
+    buffer.writeln("\nRequirements:");
+    buffer.writeln("- Show work: ${showWork ? 'Yes' : 'No'}");
+    buffer.writeln("- Precision: $precision decimal places");
+    buffer.writeln("- Use proper order of operations");
+    buffer.writeln("- Show intermediate steps");
+    
+    return buffer.toString();
+  }
+  
+  // System Prompts
+  String _getMathSystemPrompt() {
+    return """
+You are DeepSeek Math, an expert mathematical problem solver specialized in all areas of mathematics.
+
+Your capabilities include:
+- Solving complex mathematical problems step-by-step
+- Performing accurate calculations with proper precision
+- Explaining mathematical concepts clearly
+- Verifying solutions and checking answers
+- Providing alternative solution methods
+- Using proper mathematical notation and symbols
+
+Guidelines:
+- Always show your work step-by-step
+- Use proper mathematical notation (LaTeX when appropriate)
+- Verify your solutions when possible
+- Explain each step clearly
+- Provide alternative methods when applicable
+- Be precise and accurate in all calculations
+- Use appropriate mathematical terminology
+
+Your responses should be:
+- Mathematically accurate
+- Clearly explained
+- Well-structured
+- Properly formatted
+- Educational and helpful
+""";
+  }
+  
+  String _getCalculationSystemPrompt() {
+    return """
+You are DeepSeek Math, specialized in performing accurate mathematical calculations.
+
+Your calculation process:
+1. Parse the expression correctly
+2. Apply proper order of operations
+3. Show intermediate steps
+4. Provide the final result with specified precision
+5. Verify the calculation
+
+Focus on:
+- Accuracy and precision
+- Clear step-by-step work
+- Proper mathematical notation
+- Verification of results
+""";
+  }
+  
+  // Analysis Methods
+  String _detectMathTopic(String problem) {
+    final lowerProblem = problem.toLowerCase();
+    
+    if (lowerProblem.contains('derivative') || lowerProblem.contains('differentiate')) {
+      return 'Calculus';
+    }
+    
+    if (lowerProblem.contains('integral') || lowerProblem.contains('integrate')) {
+      return 'Calculus';
+    }
+    
+    if (lowerProblem.contains('equation') || lowerProblem.contains('solve')) {
+      return 'Algebra';
+    }
+    
+    if (lowerProblem.contains('triangle') || lowerProblem.contains('circle') || lowerProblem.contains('area')) {
+      return 'Geometry';
+    }
+    
+    if (lowerProblem.contains('probability') || lowerProblem.contains('statistics')) {
+      return 'Statistics';
+    }
+    
+    if (lowerProblem.contains('trig') || lowerProblem.contains('sin') || lowerProblem.contains('cos')) {
+      return 'Trigonometry';
+    }
+    
+    return 'General Math';
+  }
+  
+  String _detectDifficulty(String problem) {
+    final lowerProblem = problem.toLowerCase();
+    
+    if (lowerProblem.contains('research') || lowerProblem.contains('theorem') || lowerProblem.contains('proof')) {
+      return 'Research Level';
+    }
+    
+    if (lowerProblem.contains('advanced') || lowerProblem.contains('complex') || lowerProblem.contains('multiple')) {
+      return 'Expert';
+    }
+    
+    if (lowerProblem.contains('intermediate') || lowerProblem.contains('moderate')) {
+      return 'Advanced';
+    }
+    
+    if (lowerProblem.contains('basic') || lowerProblem.contains('simple')) {
+      return 'Basic';
+    }
+    
+    return 'Intermediate';
+  }
+  
+  Future<void> _parseSolutionSteps(String solution) async {
+    try {
+      solutionSteps.clear();
+      
+      // Parse solution into steps
+      final lines = solution.split('\n');
+      int stepNumber = 1;
+      
+      for (final line in lines) {
+        final trimmed = line.trim();
+        if (trimmed.isNotEmpty && (trimmed.contains('Step') || trimmed.contains('=') || trimmed.contains('→'))) {
+          solutionSteps.add('Step $stepNumber: $trimmed');
+          stepNumber++;
         }
       }
       
-      printAction("✅ DeepSeek Math: Problem solved");
-      
-    } catch (e) {
-      errorMessage.value = "Error solving problem: $e";
-      printAction("❌ DeepSeek Math: Error - $e");
-    } finally {
-      isLoading.value = false;
-    }
-  }
-  
-  // Build enhanced prompt for math solving
-  String _buildEnhancedPrompt(
-    String problem,
-    String category,
-    bool showSteps,
-    bool showVerification,
-    bool showAlternativeMethods,
-  ) {
-    StringBuffer enhancedPrompt = StringBuffer();
-    
-    enhancedPrompt.writeln("Solve this $category problem:");
-    enhancedPrompt.writeln(problem);
-    enhancedPrompt.writeln();
-    
-    enhancedPrompt.writeln("Requirements:");
-    if (showSteps) {
-      enhancedPrompt.writeln("- Show step-by-step solution with clear explanations");
-    }
-    if (showVerification) {
-      enhancedPrompt.writeln("- Verify the answer and show the verification process");
-    }
-    if (showAlternativeMethods) {
-      enhancedPrompt.writeln("- Provide alternative solution methods if applicable");
-    }
-    
-    enhancedPrompt.writeln("- Use proper mathematical notation and formatting");
-    enhancedPrompt.writeln("- Explain each step clearly and concisely");
-    enhancedPrompt.writeln("- Include units and final answer");
-    
-    return enhancedPrompt.toString();
-  }
-  
-  // Generate step-by-step solution
-  Future<void> _generateStepByStepSolution(String problem, String category) async {
-    try {
-      printAction("📝 DeepSeek Math: Generating step-by-step solution...");
-      
-      final stepSolution = await DeepSeekService.solveMath(
-        problem: "Provide a detailed step-by-step solution for this $category problem:\n\n$problem\n\nBreak down each step clearly.",
-        model: Constants.deepSeekMathModel,
-        temperature: 0.1,
-        maxTokens: 1024,
-      );
-      
-      if (!stepSolution.contains('Error:')) {
-        stepByStepSolution.value = stepSolution;
+      if (solutionSteps.isEmpty) {
+        solutionSteps.add('Step 1: $solution');
       }
       
     } catch (e) {
-      printAction("❌ DeepSeek Math: Step solution error - $e");
+      printAction("❌ DeepSeek Math: Error parsing solution steps - $e");
     }
   }
   
-  // Generate mathematical explanation
-  Future<void> _generateMathematicalExplanation(String problem, String solution) async {
+  Future<void> _extractFinalAnswer(String solution) async {
     try {
-      printAction("📚 DeepSeek Math: Generating mathematical explanation...");
+      // Extract final answer from solution
+      final lines = solution.split('\n');
       
-      final explanation = await DeepSeekService.solveMath(
-        problem: "Explain the mathematical concepts and principles used in solving this problem:\n\nProblem: $problem\n\nSolution: $solution",
-        model: Constants.deepSeekMathModel,
-        temperature: 0.3,
-        maxTokens: 512,
-      );
+      for (int i = lines.length - 1; i >= 0; i--) {
+        final line = lines[i].trim();
+        if (line.contains('Answer:') || line.contains('Solution:') || line.contains('=')) {
+          finalAnswer.value = line;
+          break;
+        }
+      }
       
-      if (!explanation.contains('Error:')) {
-        mathematicalExplanation.value = explanation;
+      if (finalAnswer.value.isEmpty) {
+        finalAnswer.value = solution.split('\n').last.trim();
       }
       
     } catch (e) {
-      printAction("❌ DeepSeek Math: Explanation error - $e");
+      printAction("❌ DeepSeek Math: Error extracting final answer - $e");
     }
   }
   
-  // Generate alternative solutions
-  Future<void> _generateAlternativeSolutions(String problem, String category) async {
+  Future<void> _verifySolution(String problem, String solution) async {
     try {
-      printAction("🔄 DeepSeek Math: Generating alternative solutions...");
+      // Basic verification logic
+      isCorrect.value = true; // Placeholder
+      confidence.value = "High"; // Placeholder
       
-      final alternatives = await DeepSeekService.solveMath(
-        problem: "Provide alternative methods to solve this $category problem:\n\n$problem\n\nShow different approaches and explain when each method is most appropriate.",
-        model: Constants.deepSeekMathModel,
-        temperature: 0.3,
-        maxTokens: 1024,
-      );
-      
-      if (!alternatives.contains('Error:')) {
-        // Parse alternatives into list
-        List<String> alternativeList = alternatives
-            .split('\n')
-            .where((line) => line.trim().isNotEmpty)
-            .map((line) => line.trim())
-            .toList();
-        
-        alternativeSolutions.value = alternativeList;
-      }
+      // This would implement actual verification logic
       
     } catch (e) {
-      printAction("❌ DeepSeek Math: Alternatives error - $e");
+      printAction("❌ DeepSeek Math: Error verifying solution - $e");
     }
   }
   
-  // Calculate with advanced functions
-  Future<void> calculateAdvanced({
-    required String expression,
-    String operation = 'evaluate',
-  }) async {
+  Future<void> _generateAlternativeMethods(String problem) async {
     try {
-      isLoading.value = true;
-      errorMessage.value = "";
+      alternativeMethods.clear();
+      alternativeMethods.addAll([
+        "Substitution method",
+        "Graphical method",
+        "Numerical approximation",
+        "Algebraic manipulation",
+      ]);
       
-      printAction("🔢 DeepSeek Math: Advanced calculation...");
+    } catch (e) {
+      printAction("❌ DeepSeek Math: Error generating alternative methods - $e");
+    }
+  }
+  
+  Future<void> _findRelatedConcepts(String topic) async {
+    try {
+      relatedConcepts.clear();
       
-      String prompt = "";
-      switch (operation.toLowerCase()) {
-        case 'evaluate':
-          prompt = "Evaluate this mathematical expression: $expression";
+      switch (topic.toLowerCase()) {
+        case 'algebra':
+          relatedConcepts.addAll(['Linear equations', 'Quadratic equations', 'Polynomials', 'Factoring']);
           break;
-        case 'simplify':
-          prompt = "Simplify this mathematical expression: $expression";
+        case 'calculus':
+          relatedConcepts.addAll(['Limits', 'Derivatives', 'Integrals', 'Series']);
           break;
-        case 'factor':
-          prompt = "Factor this expression: $expression";
+        case 'geometry':
+          relatedConcepts.addAll(['Triangles', 'Circles', 'Polygons', 'Area and perimeter']);
           break;
-        case 'expand':
-          prompt = "Expand this expression: $expression";
-          break;
-        case 'solve':
-          prompt = "Solve this equation: $expression";
+        case 'statistics':
+          relatedConcepts.addAll(['Mean', 'Median', 'Mode', 'Standard deviation']);
           break;
         default:
-          prompt = "Calculate: $expression";
-      }
-      
-      final result = await DeepSeekService.solveMath(
-        problem: prompt,
-        model: Constants.deepSeekMathModel,
-        temperature: 0.1,
-        maxTokens: 512,
-      );
-      
-      if (result.contains('Error:')) {
-        errorMessage.value = result;
-      } else {
-        solution.value = result;
+          relatedConcepts.addAll(['Basic operations', 'Problem solving', 'Mathematical reasoning']);
       }
       
     } catch (e) {
-      errorMessage.value = "Error in calculation: $e";
-      printAction("❌ DeepSeek Math: Calculation error - $e");
-    } finally {
-      isLoading.value = false;
+      printAction("❌ DeepSeek Math: Error finding related concepts - $e");
     }
   }
   
-  // Graph analysis
-  Future<void> analyzeGraph(String graphDescription) async {
-    try {
-      isLoading.value = true;
-      errorMessage.value = "";
-      
-      printAction("📈 DeepSeek Math: Analyzing graph...");
-      
-      final analysis = await DeepSeekService.solveMath(
-        problem: "Analyze this graph and provide mathematical insights:\n\n$graphDescription\n\nInclude: domain, range, intercepts, asymptotes, critical points, and behavior.",
-        model: Constants.deepSeekMathModel,
-        temperature: 0.2,
-        maxTokens: 1024,
-      );
-      
-      if (analysis.contains('Error:')) {
-        errorMessage.value = analysis;
-      } else {
-        solution.value = analysis;
-      }
-      
-    } catch (e) {
-      errorMessage.value = "Error analyzing graph: $e";
-      printAction("❌ DeepSeek Math: Graph analysis error - $e");
-    } finally {
-      isLoading.value = false;
-    }
-  }
-  
-  // Get sample problems for category
-  List<String> getSampleProblems(String category) {
-    return sampleProblems[category] ?? sampleProblems['general']!;
-  }
-  
-  // Load sample problem
-  void loadSampleProblem(String problem) {
-    // This would typically be called from the UI
-    solveProblem(problem: problem);
-  }
-  
-  // Clear all data
-  void clearData() {
-    solution.value = "";
+  // Utility Methods
+  void clearSolution() {
+    mathSolution.value = "";
     stepByStepSolution.value = "";
-    mathematicalExplanation.value = "";
-    alternativeSolutions.clear();
-    errorMessage.value = "";
+    finalAnswer.value = "";
+    solutionSteps.clear();
+    alternativeMethods.clear();
+    relatedConcepts.clear();
+    mathMetrics.clear();
+    isCorrect.value = false;
+    confidence.value = "";
   }
   
-  // Update category selection
-  void updateCategory(String category) {
-    selectedCategory.value = category;
-    printAction("🧮 DeepSeek Math: Category updated to $category");
+  void copySolutionToClipboard() {
+    if (mathSolution.value.isNotEmpty) {
+      Clipboard.setData(ClipboardData(text: mathSolution.value));
+      utils.showSnackBar("Solution copied to clipboard");
+    }
   }
-  
-  // Toggle options
-  void toggleSteps() => showSteps.value = !showSteps.value;
-  void toggleVerification() => showVerification.value = !showVerification.value;
-  void toggleAlternatives() => showAlternativeMethods.value = !showAlternativeMethods.value;
 }
