@@ -80,4 +80,49 @@ class VoicePageController extends GetxController {
     }
     super.onInit();
   }
+  
+  // Enhanced method to fetch voices directly from ElevenLabs
+  Future<void> fetchElevenLabsVoices() async {
+    try {
+      // Initialize ElevenLabs API
+      await Global.elevenLabInit();
+      
+      // Fetch voices directly from ElevenLabs
+      final voices = await Global.elevenLabs.listVoices();
+      
+      printAction("=== ElevenLabs Voices Available ===");
+      printAction("Total voices: ${voices.length}");
+      
+      for (int i = 0; i < voices.length; i++) {
+        final voice = voices[i];
+        printAction("Voice ${i + 1}:");
+        printAction("  - Name: ${voice.name}");
+        printAction("  - ID: ${voice.voiceId}");
+        printAction("  - Category: ${voice.category}");
+        printAction("  - Language: ${voice.language ?? 'Not specified'}");
+        printAction("  - Preview URL: ${voice.previewUrl}");
+        printAction("  - Description: ${voice.description ?? 'No description'}");
+        printAction("  ---");
+      }
+      
+      // Convert ElevenLabs voices to app format
+      List<VoiceDtl> elevenLabsVoices = voices.map((voice) => VoiceDtl(
+        voiceId: voice.voiceId,
+        name: voice.name,
+        elevenLabId: voice.voiceId,
+        img: voice.previewUrl,
+        isActive: "1",
+        isSelected: voice.voiceId == Constants.elevenLabId ? "1" : "0",
+      )).toList();
+      
+      // Update voice list with ElevenLabs voices
+      voiceList.value = elevenLabsVoices;
+      
+      printAction("Updated voice list with ${voiceList.length} ElevenLabs voices");
+      
+    } catch (e) {
+      printAction("Error fetching ElevenLabs voices: $e");
+      utils.showSnackBar("Error fetching voices: $e");
+    }
+  }
 }
