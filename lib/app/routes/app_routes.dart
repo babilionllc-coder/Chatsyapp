@@ -56,6 +56,7 @@ abstract class Routes {
   static const CREATE_AI_ASSISTANT = _Paths.CREATE_AI_ASSISTANT;
   static const AI_AGENT = _Paths.AI_AGENT;
   static const DEPLOYMENT_AI = _Paths.DEPLOYMENT_AI;
+  static const QA_AGENT = _Paths.QA_AGENT;
 }
 
 abstract class _Paths {
@@ -110,4 +111,5 @@ abstract class _Paths {
   static const CREATE_AI_ASSISTANT = '/create-ai-assistant';
   static const AI_AGENT = '/ai-agent';
   static const DEPLOYMENT_AI = '/deployment-ai';
+  static const QA_AGENT = '/qa-agent';
 }
