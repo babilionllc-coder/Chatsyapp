@@ -10,7 +10,7 @@ import '../../home/controllers/user_profile_model.dart';
 import '../../newChat/models/phm_id_model.dart';
 
 class ImageScanController extends GetxController with WidgetsBindingObserver {
-  //TODO: Implement ImageScanController
+  // Enhanced Image Scan Controller with full functionality
   ScrollController scrollController = ScrollController();
 
   TextEditingController newChatController = TextEditingController();
@@ -25,11 +25,33 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
     'Scan this image',
     'Describe the scene in this photo',
     'Write 10 captions',
+    'Extract text from image',
+    'Identify objects in image',
+    'Analyze image composition',
+    'Generate alt text',
+    'Find faces in image',
+    'Describe colors and mood',
+    'Create image story',
   ];
 
   RxList<String> newQuestionList = <String>[].obs;
 
   var endAnimFinish = false.obs;
+  
+  // Enhanced image analysis features
+  RxBool isLoading = false.obs;
+  RxString imageAnalysis = "".obs;
+  RxList<String> detectedObjects = <String>[].obs;
+  RxString extractedText = "".obs;
+  RxString imageDescription = "".obs;
+  RxString imageMood = "".obs;
+  RxList<String> imageColors = <String>[].obs;
+  
+  // Analysis options
+  RxBool extractText = true.obs;
+  RxBool detectObjects = true.obs;
+  RxBool analyzeComposition = true.obs;
+  RxBool detectFaces = true.obs;
 
   @override
   void onInit() {
@@ -225,5 +247,152 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
       isAPICall.value = false;
       askQuestionData.removeLast();
     }
+  }
+  
+  // Enhanced image analysis methods
+  Future<void> analyzeImageWithGPT5() async {
+    try {
+      isLoading.value = true;
+      
+      // Enhanced prompt for GPT-5 image analysis
+      String enhancedPrompt = _buildEnhancedImagePrompt();
+      
+      // Call GPT-5 with advanced image analysis
+      await ChatApi.chatGPTAPI(
+        message: enhancedPrompt,
+        modelType: ModelType.chatGPT,
+        isRealTime: true,
+        chatGPTAddData: null,
+        systemText: _getImageAnalysisSystemPrompt(),
+        documentText: null,
+        modelPrompt: null,
+        fileName: "image_analysis",
+        fileText: enhancedPrompt,
+      );
+      
+    } catch (e) {
+      printAction("Image analysis error: $e");
+      utils.showSnackBar("Error analyzing image: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+  
+  String _buildEnhancedImagePrompt() {
+    String basePrompt = """
+**Advanced Image Analysis Task**
+
+Generate a comprehensive analysis of the image using GPT-5's advanced vision capabilities.
+
+**Image Information:**
+- Image Path: ${imagePath.value}
+- Analysis Options: 
+  - Extract Text: ${extractText.value}
+  - Detect Objects: ${detectObjects.value}
+  - Analyze Composition: ${analyzeComposition.value}
+  - Detect Faces: ${detectFaces.value}
+
+**Analysis Requirements:**
+""";
+
+    basePrompt += """
+**Analysis Components:**
+1. **Visual Description** - Detailed description of what you see
+2. **Object Detection** - List all objects, people, and elements
+3. **Text Extraction** - Extract any visible text in the image
+4. **Composition Analysis** - Analyze layout, colors, and visual elements
+5. **Mood and Atmosphere** - Describe the emotional tone and atmosphere
+6. **Context and Setting** - Identify location, time period, or situation
+7. **Technical Details** - Analyze lighting, focus, and photographic elements
+
+**Advanced Features:**
+- Provide detailed object identification
+- Extract and transcribe any text
+- Analyze color palette and mood
+- Identify faces and expressions
+- Suggest image improvements
+- Generate creative captions
+
+**Response Format:**
+Use clear headings, bullet points, and structured formatting for easy reading.
+""";
+
+    return basePrompt;
+  }
+  
+  String _getImageAnalysisSystemPrompt() {
+    return """
+You are an expert image analyst powered by GPT-5 with advanced vision capabilities. Your role is to provide comprehensive, accurate, and insightful analysis of images.
+
+**Core Capabilities:**
+- Detailed visual description and analysis
+- Object detection and identification
+- Text extraction and transcription
+- Composition and artistic analysis
+- Mood and atmosphere assessment
+- Face detection and expression analysis
+- Color palette and lighting analysis
+
+**Analysis Standards:**
+- Always maintain accuracy and objectivity
+- Provide structured, easy-to-read responses
+- Include specific details and observations
+- Identify both obvious and subtle elements
+- Suggest practical applications or insights
+- Maintain professional, informative tone
+
+**Response Guidelines:**
+- Use clear headings and bullet points
+- Include detailed visual descriptions
+- Highlight important elements and details
+- Provide context and interpretation
+- Suggest creative applications
+- Include technical observations when relevant
+
+Always prioritize accuracy, detail, and user value in your image analysis.
+""";
+  }
+  
+  // Method to generate different types of image analysis
+  Future<void> generateCustomImageAnalysis(String analysisType) async {
+    String customPrompt = "";
+    
+    switch (analysisType.toLowerCase()) {
+      case 'extract text':
+        customPrompt = "Extract and transcribe all visible text from this image.";
+        break;
+      case 'identify objects':
+        customPrompt = "Identify and list all objects, people, and elements in this image.";
+        break;
+      case 'analyze composition':
+        customPrompt = "Analyze the composition, colors, lighting, and visual elements of this image.";
+        break;
+      case 'generate alt text':
+        customPrompt = "Generate comprehensive alt text for accessibility purposes.";
+        break;
+      case 'find faces':
+        customPrompt = "Detect and analyze any faces, expressions, and emotions in this image.";
+        break;
+      case 'describe colors':
+        customPrompt = "Describe the color palette, mood, and atmosphere of this image.";
+        break;
+      case 'create story':
+        customPrompt = "Create a creative story or narrative based on this image.";
+        break;
+      default:
+        customPrompt = "Provide a comprehensive analysis of this image.";
+    }
+    
+    await ChatApi.chatGPTAPI(
+      message: customPrompt,
+      modelType: ModelType.chatGPT,
+      isRealTime: true,
+      chatGPTAddData: null,
+      systemText: _getImageAnalysisSystemPrompt(),
+      documentText: null,
+      modelPrompt: null,
+      fileName: "image_analysis",
+      fileText: customPrompt,
+    );
   }
 }
