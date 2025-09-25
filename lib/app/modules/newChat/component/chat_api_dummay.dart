@@ -287,11 +287,11 @@ NOTE:
     if (Utils().isValidationEmpty(modelName)) {
       modelName =
           (bottomNavigationController.selectAiModelList.isEmpty
-              ? "gpt-3.5-trbuo"
+              ? "gpt-5"
               : bottomNavigationController
                       .selectAiModelList[selectModelIndex]
                       .model ??
-                  "gemini-1.5-pro");
+                  "gpt-5");
     }
 
     if (Global.isSubscription.value != "1" && Global.chatLimit.value < 1) {
@@ -1063,7 +1063,7 @@ NOTE:
           var aiModelName =
               modelName ??
               (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-                  ? "gpt-3.5-trbuo"
+                  ? "gpt-5"
                   : Get.put(BottomNavigationController())
                           .selectAiModelList[(getStorageData.containKey(
                                 getStorageData.selectModelIndex,
@@ -1076,7 +1076,7 @@ NOTE:
                               )
                               : 0]
                           .model ??
-                      "gpt-3.5-turbo");
+                      "gpt-5");
 
           if (modelType == ModelType.deepSeek) {
             aiModelName = 'deepseek-chat';
@@ -1726,11 +1726,11 @@ Future<void> modelsHistoryAPI(
   if (Utils().isValidationEmpty(modelName)) {
     modelName =
         (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-            ? "gpt-3.5-trbuo"
+            ? "gpt-5"
             : Get.put(
                   BottomNavigationController(),
                 ).selectAiModelList[ChatApi.selectModelIndex].model ??
-                "gemini-1.5-pro");
+                "gpt-5");
   }
   printAction("modelNamemodelNamemodelNamemodelName $modelName");
 

@@ -36,6 +36,7 @@ class Constants {
 
   static String chatGptMini = "chat_gpt_mini";
   static String chatGpt4o = "chat_gpt_4o";
+  static String chatGpt5 = "chat_gpt_5";
   static String gemini = "gemini";
   static String deepSeek = "deepseek";
   static String summarizeDocAPIType = "summarize_doc";

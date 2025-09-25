@@ -124,7 +124,7 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
         "user_id": getStorageData.readString(getStorageData.userId),
         "ai_model":
             (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-                    ? "gpt-3.5-turbo"
+                    ? "gpt-5"
                     : Get.put(BottomNavigationController())
                             .selectAiModelList[(getStorageData.containKey(
                                   getStorageData.selectModelIndex,
@@ -137,7 +137,7 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
                                 )
                                 : 0]
                             .model ??
-                        "gpt-3.5-turbo")
+                        "gpt-5")
                 .toString(),
         "title": "Image Scan",
         "is_edit": isRegenerate ? "1" : "0",

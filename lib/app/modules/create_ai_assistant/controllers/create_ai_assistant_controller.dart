@@ -41,7 +41,7 @@ class CreateAiAssistantController extends GetxController {
     //   try {
     //     var result = await aiClient.createChatCompletion(
     //       request: CreateChatCompletionRequest(
-    //         model: ChatCompletionModel.modelId("gpt-4o-mini"),
+    //         model: ChatCompletionModel.modelId("gpt-5"),
     //         messages: [
     //           ChatCompletionMessage.system(
     //             content: Constants.magicStickPrompt!,
