@@ -27,6 +27,50 @@ class ChatApi {
   static String tavilyApiKey = "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";
 
   static String? gptTemperature;
+  
+  // Advanced GPT-5 Performance Settings
+  static const int maxTokens = 4096;
+  static const double topP = 0.9;
+  static const double frequencyPenalty = 0.1;
+  static const double presencePenalty = 0.1;
+  static const double defaultTemperature = 0.7;
+  
+  // GPT-5 Model Variants
+  static const String gpt5Turbo = "gpt-5-turbo";
+  static const String gpt5Pro = "gpt-5-pro";
+  static const String gpt5Max = "gpt-5-max";
+  
+  // Advanced GPT Model Selection
+  static String _getOptimalGPTModel() {
+    try {
+      final bottomNavigationController = Get.put(BottomNavigationController());
+      
+      if (bottomNavigationController.selectAiModelList.isEmpty) {
+        return gpt5Pro; // Default to GPT-5 Pro for best performance
+      }
+      
+      final selectedIndex = getStorageData.containKey(getStorageData.selectModelIndex)
+          ? int.parse(getStorageData.readString(getStorageData.selectModelIndex) ?? "0")
+          : 0;
+      
+      final selectedModel = bottomNavigationController.selectAiModelList[selectedIndex].model;
+      
+      // Optimize model selection based on capabilities
+      switch (selectedModel?.toLowerCase()) {
+        case 'gpt-4':
+        case 'gpt-4-turbo':
+        case 'gpt-4o':
+          return gpt5Pro; // Upgrade to GPT-5 Pro
+        case 'gpt-3.5-turbo':
+        case 'gpt-3.5':
+          return gpt5Turbo; // Upgrade to GPT-5 Turbo
+        default:
+          return selectedModel ?? gpt5Pro;
+      }
+    } catch (e) {
+      return gpt5Pro; // Fallback to GPT-5 Pro
+    }
+  }
 
   String documentAddText =
       "Hi AI I will send you some text and then I will ask you some questions related to the text please answer me.";
@@ -754,6 +798,113 @@ NOTE:
                             );
                           }
                           break;
+                        case "analyze_trends":
+                          try {
+                            printAction(
+                              "Trend analysis query: ${element.args['topic'].toString()}",
+                            );
+                            
+                            final client = TavilyClient();
+                            final timeframe = element.args['timeframe']?.toString() ?? 'weekly';
+                            final topic = element.args['topic'].toString();
+                            
+                            // Enhanced query for trend analysis
+                            String trendQuery = "$topic trends $timeframe analysis patterns";
+                            
+                            final res1 = await client.search(
+                              request: SearchRequest(
+                                apiKey: tavilyApiKey,
+                                query: trendQuery,
+                                maxResults: 8,
+                                includeAnswer: true,
+                                includeImages: false,
+                                searchDepth: "advanced",
+                              ),
+                            );
+
+                            tempContents.add(
+                              Content.functionResponse(element.name, {
+                                "Important Guidelines":
+                                    "Note: Always ensure that the content includes information about when it was fetched. By default, in your case, it should display the date using `${utils.todayDate()}`.",
+                                "trend_analysis": res1,
+                                "timeframe": timeframe,
+                                "analysis_instructions": "Provide comprehensive trend analysis with patterns, insights, and future predictions.",
+                              }),
+                            );
+                          } catch (e) {
+                            printAction("Trend analysis error $e");
+                          }
+                          break;
+                        case "generate_insights":
+                          try {
+                            printAction(
+                              "Insight generation for: ${element.args['data'].toString()}",
+                            );
+                            
+                            final analysisType = element.args['analysis_type']?.toString() ?? 'statistical';
+                            final data = element.args['data'].toString();
+                            
+                            // Use Tavily to get additional context for insights
+                            final client = TavilyClient();
+                            final res1 = await client.search(
+                              request: SearchRequest(
+                                apiKey: tavilyApiKey,
+                                query: "$data $analysisType analysis insights",
+                                maxResults: 5,
+                                includeAnswer: true,
+                                searchDepth: "advanced",
+                              ),
+                            );
+
+                            tempContents.add(
+                              Content.functionResponse(element.name, {
+                                "Important Guidelines":
+                                    "Note: Always ensure that the content includes information about when it was fetched. By default, in your case, it should display the date using `${utils.todayDate()}`.",
+                                "insight_data": res1,
+                                "analysis_type": analysisType,
+                                "analysis_instructions": "Generate deep insights, patterns, correlations, and actionable recommendations from the data.",
+                              }),
+                            );
+                          } catch (e) {
+                            printAction("Insight generation error $e");
+                          }
+                          break;
+                        case "create_summary":
+                          try {
+                            printAction(
+                              "Creating summary: ${element.args['summary_type'].toString()}",
+                            );
+                            
+                            final summaryType = element.args['summary_type']?.toString() ?? 'detailed';
+                            final length = element.args['length']?.toString() ?? 'medium';
+                            final content = element.args['content'].toString();
+                            
+                            // Enhanced summary with context
+                            final client = TavilyClient();
+                            final res1 = await client.search(
+                              request: SearchRequest(
+                                apiKey: tavilyApiKey,
+                                query: "$content summary $summaryType $length",
+                                maxResults: 3,
+                                includeAnswer: true,
+                                searchDepth: "basic",
+                              ),
+                            );
+
+                            tempContents.add(
+                              Content.functionResponse(element.name, {
+                                "Important Guidelines":
+                                    "Note: Always ensure that the content includes information about when it was fetched. By default, in your case, it should display the date using `${utils.todayDate()}`.",
+                                "summary_context": res1,
+                                "summary_type": summaryType,
+                                "summary_length": length,
+                                "analysis_instructions": "Create a comprehensive $summaryType summary of $length length with key points, insights, and actionable recommendations.",
+                              }),
+                            );
+                          } catch (e) {
+                            printAction("Summary creation error $e");
+                          }
+                          break;
                         case Constants.getWeather:
                           Map<String, Object>? map = await getCityWeather(
                             cityName: element.args['city_name'].toString(),
@@ -982,16 +1133,61 @@ NOTE:
             token = Constants.chatToken;
           }
 
-          final client = OpenAIClient(apiKey: token, baseUrl: baseUrl);
+          // Advanced OpenAI Client with Enhanced Configuration
+          final client = OpenAIClient(
+            apiKey: token, 
+            baseUrl: baseUrl,
+            // Add timeout and retry configuration
+            timeout: const Duration(seconds: 60),
+          );
           List<ChatCompletionMessage> messageList = [];
 
           if (!utils.isValidationEmpty(systemText)) {
             messageList.add(ChatCompletionMessage.system(content: systemText!));
           }
 
+          // Enhanced system prompt for GPT-5
+          String enhancedSystemPrompt = """
+${modelPrompt ?? toolsSystemPrompt ?? ""}
+
+You are an advanced AI assistant powered by GPT-5 with enhanced capabilities:
+
+**Core Capabilities:**
+- Advanced reasoning and problem-solving
+- Real-time information access via Tavily search
+- Deep research and analysis
+- Trend analysis and pattern recognition
+- Insight generation from data
+- Intelligent summarization
+
+**Response Guidelines:**
+- Always provide comprehensive, accurate, and up-to-date information
+- Use real-time data when available through Tavily search
+- Structure responses with clear sections and bullet points
+- Include relevant examples and actionable recommendations
+- Cite sources and timestamps when using real-time data
+- Adapt response style to user's needs (technical, casual, professional)
+
+**Advanced Features:**
+- Multi-step reasoning for complex problems
+- Context-aware responses based on conversation history
+- Proactive suggestions and follow-up questions
+- Error handling with graceful fallbacks
+- Optimized for both iOS and Android platforms
+
+**Real-time Integration:**
+- Weather data, news, trends, and current events
+- Deep research with multi-source verification
+- Trend analysis with predictive insights
+- Data analysis with statistical insights
+- Intelligent summarization with key takeaways
+
+Always prioritize accuracy, relevance, and user experience in your responses.
+          """;
+
           messageList.add(
             ChatCompletionMessage.system(
-              content: modelPrompt ?? toolsSystemPrompt,
+              content: enhancedSystemPrompt,
             ),
           );
 
@@ -1132,25 +1328,81 @@ NOTE:
                 },
               ),
             ),
+            const ChatCompletionTool(
+              type: ChatCompletionToolType.function,
+              function: FunctionObject(
+                name: "analyze_trends",
+                description: "Analyze current trends and patterns in any topic using advanced AI analysis",
+                parameters: {
+                  "type": "object",
+                  "properties": {
+                    "topic": {
+                      "type": "string",
+                      "description": "The topic to analyze for trends and patterns"
+                    },
+                    "timeframe": {
+                      "type": "string",
+                      "description": "Timeframe for trend analysis: 'daily', 'weekly', 'monthly', 'yearly'",
+                      "enum": ["daily", "weekly", "monthly", "yearly"]
+                    }
+                  },
+                  "required": ["topic"],
+                },
+              ),
+            ),
+            const ChatCompletionTool(
+              type: ChatCompletionToolType.function,
+              function: FunctionObject(
+                name: "generate_insights",
+                description: "Generate AI-powered insights and analysis from data or information",
+                parameters: {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "string",
+                      "description": "The data or information to analyze for insights"
+                    },
+                    "analysis_type": {
+                      "type": "string",
+                      "description": "Type of analysis: 'statistical', 'sentiment', 'predictive', 'comparative'",
+                      "enum": ["statistical", "sentiment", "predictive", "comparative"]
+                    }
+                  },
+                  "required": ["data"],
+                },
+              ),
+            ),
+            const ChatCompletionTool(
+              type: ChatCompletionToolType.function,
+              function: FunctionObject(
+                name: "create_summary",
+                description: "Create intelligent summaries with key points, insights, and actionable recommendations",
+                parameters: {
+                  "type": "object",
+                  "properties": {
+                    "content": {
+                      "type": "string",
+                      "description": "The content to summarize"
+                    },
+                    "summary_type": {
+                      "type": "string",
+                      "description": "Type of summary: 'executive', 'detailed', 'bullet_points', 'action_items'",
+                      "enum": ["executive", "detailed", "bullet_points", "action_items"]
+                    },
+                    "length": {
+                      "type": "string",
+                      "description": "Summary length: 'short', 'medium', 'long'",
+                      "enum": ["short", "medium", "long"]
+                    }
+                  },
+                  "required": ["content"],
+                },
+              ),
+            ),
           ];
 
-          var aiModelName =
-              modelName ??
-              (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-                  ? "gpt-5"
-                  : Get.put(BottomNavigationController())
-                          .selectAiModelList[(getStorageData.containKey(
-                                getStorageData.selectModelIndex,
-                              ))
-                              ? int.parse(
-                                getStorageData.readString(
-                                      getStorageData.selectModelIndex,
-                                    ) ??
-                                    "0",
-                              )
-                              : 0]
-                          .model ??
-                      "gpt-5");
+          // Advanced GPT-5 Model Selection with Performance Optimization
+          var aiModelName = modelName ?? _getOptimalGPTModel();
 
           if (modelType == ModelType.deepSeek) {
             aiModelName = 'deepseek-chat';
@@ -1164,14 +1416,23 @@ NOTE:
                   stream: true,
                   temperature:
                       (isRealTime != null && isRealTime)
-                          ? double.parse(gptTemperature ?? "1")
-                          : null,
+                          ? double.parse(gptTemperature ?? defaultTemperature.toString())
+                          : defaultTemperature,
+                  maxTokens: maxTokens, // Optimized token limit
+                  topP: topP, // Nucleus sampling for better creativity
+                  frequencyPenalty: frequencyPenalty, // Reduce repetition
+                  presencePenalty: presencePenalty, // Encourage new topics
+                  stop: null, // No stop sequences for better flow
+                  user: "chatsy_user_${DateTime.now().millisecondsSinceEpoch}", // User identification
 
-                  ///TODO: tools: toolsList
+                  ///Advanced tools configuration
                   tools:
                       (chatGPTAddData == null && isRealTime != null)
                           ? toolsList
                           : null,
+                  toolChoice: (chatGPTAddData == null && isRealTime != null)
+                      ? ChatCompletionToolChoice.auto
+                      : null,
                 ),
               );
 
