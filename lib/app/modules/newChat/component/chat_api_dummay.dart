@@ -25,6 +25,7 @@ class ChatApi {
 
   static String geminiModel = "gemini-1.5-pro";
   static String tavilyApiKey = "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";
+  static String deepSeekApiKey = "sk-cfe7af2d18464568a829e6a137151553";
 
   static String? gptTemperature;
   
@@ -64,11 +65,92 @@ class ChatApi {
         case 'gpt-3.5-turbo':
         case 'gpt-3.5':
           return gpt5Turbo; // Upgrade to GPT-5 Turbo
+        case 'deepseek':
+        case 'deepseek-chat':
+          return 'deepseek-chat'; // Use DeepSeek model
         default:
           return selectedModel ?? gpt5Pro;
       }
     } catch (e) {
       return gpt5Pro; // Fallback to GPT-5 Pro
+    }
+  }
+  
+  // DeepSeek API Integration
+  static Future<void> deepSeekAPI({
+    required String message,
+    required ModelType modelType,
+    bool? isRealTime,
+    List<ChatCompletionMessage>? chatGPTAddData,
+    String? systemText,
+    String? documentText,
+    String? modelPrompt,
+    String? fileName,
+    String? fileText,
+  }) async {
+    try {
+      printAction("🤖 DeepSeek API: Starting request...");
+      
+      // Prepare messages for DeepSeek
+      List<Map<String, dynamic>> messages = [];
+      
+      if (!Utils().isValidationEmpty(systemText)) {
+        messages.add({
+          "role": "system",
+          "content": systemText,
+        });
+      }
+      
+      if (!Utils().isValidationEmpty(documentText)) {
+        messages.add({
+          "role": "user",
+          "content": "$message\n\nDocument Content:\n$documentText",
+        });
+      } else {
+        messages.add({
+          "role": "user",
+          "content": message,
+        });
+      }
+      
+      // Make DeepSeek API call
+      final response = await http.post(
+        Uri.parse('https://api.deepseek.com/v1/chat/completions'),
+        headers: {
+          'Authorization': 'Bearer $deepSeekApiKey',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode({
+          'model': 'deepseek-chat',
+          'messages': messages,
+          'max_tokens': maxTokens,
+          'temperature': double.parse(gptTemperature ?? defaultTemperature.toString()),
+          'stream': false,
+        }),
+      );
+      
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        final content = responseData['choices'][0]['message']['content'];
+        
+        printAction("✅ DeepSeek API: Response received");
+        printAction("DeepSeek Response: $content");
+        
+        // Add response to chat
+        if (chatGPTAddData != null) {
+          chatGPTAddData.add(ChatCompletionMessage(
+            role: ChatCompletionMessageRole.assistant,
+            content: content,
+          ));
+        }
+        
+      } else {
+        printAction("❌ DeepSeek API: Error ${response.statusCode}");
+        printAction("DeepSeek Error: ${response.body}");
+      }
+      
+    } catch (e) {
+      printAction("❌ DeepSeek API: Exception - $e");
     }
   }
 

@@ -77,6 +77,7 @@ class Constants {
   static String elevenLabId = 'YOUR_ELEVENLABS_VOICE_ID_HERE';
   static String youtubeKey = 'YOUR_YOUTUBE_API_KEY_HERE';
   static String weatherKey = 'YOUR_WEATHER_API_KEY_HERE';
+  static String deepSeekApiKey = 'sk-cfe7af2d18464568a829e6a137151553';
 
   ///TODO: Tools Type
   static const String getUtcTime = 'get_utc_time';

@@ -54,6 +54,7 @@ abstract class Routes {
   static const FORGOT_PASSWORD_SCREEN = _Paths.FORGOT_PASSWORD_SCREEN;
   static const SOCIAL_SCREEN = _Paths.SOCIAL_SCREEN;
   static const CREATE_AI_ASSISTANT = _Paths.CREATE_AI_ASSISTANT;
+  static const AI_AGENT = _Paths.AI_AGENT;
 }
 
 abstract class _Paths {
@@ -106,4 +107,5 @@ abstract class _Paths {
   static const FORGOT_PASSWORD_SCREEN = '/forgot-password-screen';
   static const SOCIAL_SCREEN = '/social-screen';
   static const CREATE_AI_ASSISTANT = '/create-ai-assistant';
+  static const AI_AGENT = '/ai-agent';
 }
