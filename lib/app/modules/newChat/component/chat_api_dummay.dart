@@ -995,46 +995,49 @@ NOTE:
               function: FunctionObject(
                 name: Constants.getWeather,
                 description:
-                    "Fetches weather data for a given city using the OpenWeatherMap API",
+                    "Fetches real-time weather data for any city worldwide using the OpenWeatherMap API",
                 parameters: {
                   "type": "object",
                   "properties": {
                     "city_name": {
                       "type": "string",
                       "description":
-                          "Name of the city to retrieve weather data for",
+                          "Name of the city to retrieve current weather data for",
                     },
                   },
                   "required": ["city_name"],
                 },
               ),
             ),
-            // const ChatCompletionTool(
-            //   type: ChatCompletionToolType.function,
-            //   function: FunctionObject(
-            //     name: Constants.searchWithDuckduckgo,
-            //     description: "Search the web using DuckDuckGo",
-            //     parameters: {
-            //       "type": "object",
-            //       "properties": {
-            //         "query": {"type": "string", "description": "The search query to perform on DuckDuckGo"}
-            //       },
-            //       "required": ["query"]
-            //     },
-            //   ),
-            // ),
+            const ChatCompletionTool(
+              type: ChatCompletionToolType.function,
+              function: FunctionObject(
+                name: Constants.searchWithDuckduckgo,
+                description: "Search the web in real-time using DuckDuckGo for current news and information",
+                parameters: {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string", 
+                      "description": "The search query to perform on DuckDuckGo for real-time results"
+                    }
+                  },
+                  "required": ["query"]
+                },
+              ),
+            ),
             const ChatCompletionTool(
               type: ChatCompletionToolType.function,
               function: FunctionObject(
                 name: Constants.googleSearch,
-                description: "Search the web using Search Engine",
+                description: "Search the web in real-time using Google Search Engine for current information",
                 parameters: {
                   "type": "object",
                   "properties": {
                     "query": {
                       "type": "string",
                       "description":
-                          "The search query to perform on Internet Search Engine",
+                          "The search query to perform on Google Search Engine for real-time results",
                     },
                   },
                   "required": ["query"],
@@ -1045,13 +1048,13 @@ NOTE:
               type: ChatCompletionToolType.function,
               function: FunctionObject(
                 name: Constants.getUtcTime,
-                description: "Get the current UTC time",
+                description: "Get current UTC time and date information with timezone support",
                 parameters: {
                   "type": "object",
                   "properties": {
                     "query": {
                       "type": "string",
-                      "description": "Get the current UTC time",
+                      "description": "Optional timezone to get time for (e.g., 'America/New_York', 'Europe/London')",
                     },
                   },
                   // "required": ["query"],
