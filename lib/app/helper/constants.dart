@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 
 import 'all_imports.dart';
 import 'get_storage_data.dart';
+import '../config/api_keys.dart';
 
 double commonLeadingWith = 20.px;
 
@@ -67,17 +68,17 @@ class Constants {
   static const String apiKey = 'YOUR_BACKEND_API_KEY_HERE';
   static const String gptURL = 'https://api.openai.com/v1/chat/completions';
 
-  // SECURITY: API keys should be stored in environment variables or secure configuration
-  // Secure API Key Management - Keys loaded from environment variables
-  static String chatToken = 'YOUR_OPENAI_API_KEY_HERE';
-  static String geminiKey = 'YOUR_GEMINI_API_KEY_HERE';
+  // SECURITY: API keys loaded from secure configuration
+  // Secure API Key Management - Keys loaded from api_keys.dart
+  static String chatToken = ApiKeys.openaiApiKey;
+  static String geminiKey = ApiKeys.geminiApiKey;
   static String? magicStickPrompt;
 
-  static String elevenLabVoiceKey = 'YOUR_ELEVENLABS_API_KEY_HERE';
-  static String elevenLabId = 'YOUR_ELEVENLABS_VOICE_ID_HERE';
-  static String youtubeKey = 'YOUR_YOUTUBE_API_KEY_HERE';
-  static String weatherKey = 'YOUR_WEATHER_API_KEY_HERE';
-  static String deepSeekApiKey = 'YOUR_DEEPSEEK_API_KEY_HERE';
+  static String elevenLabVoiceKey = ApiKeys.elevenLabsApiKey;
+  static String elevenLabId = ApiKeys.elevenLabsVoiceId;
+  static String youtubeKey = ApiKeys.youtubeApiKey;
+  static String weatherKey = ApiKeys.weatherApiKey;
+  static String deepSeekApiKey = ApiKeys.deepSeekApiKey;
   
   // DeepSeek Configuration
   static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';
