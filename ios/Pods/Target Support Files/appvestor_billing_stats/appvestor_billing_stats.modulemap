@@ -1,0 +1,6 @@
+framework module appvestor_billing_stats {
+  umbrella header "appvestor_billing_stats-umbrella.h"
+
+  export *
+  module * { export * }
+}
