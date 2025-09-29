@@ -23,11 +23,8 @@ class Utils {
   static void darkStatusBar() {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: AppColors.transparent,
         statusBarIconBrightness: (Platform.isAndroid) ? Brightness.dark : Brightness.light,
         statusBarBrightness: (Platform.isAndroid) ? Brightness.dark : Brightness.light,
-        systemNavigationBarColor: AppColors.white,
-        systemNavigationBarDividerColor: Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.dark,
       ),
     );
@@ -90,9 +87,7 @@ class Utils {
   static void lightStatusBar() {
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: AppColors.transparent,
-        systemNavigationBarColor: AppColors.white,
-        statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light, // status bar color
+        statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
         statusBarBrightness: isLight ? Brightness.light : Brightness.dark,
       ),
     );

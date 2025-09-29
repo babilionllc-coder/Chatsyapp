@@ -122,8 +122,17 @@ class HttpUtil {
   void onError(ErrorEntity eInfo, BuildContext context) {
     printError("error.code -> ${eInfo.code}, error.message -> ${eInfo.message}");
     Loading.dismiss();
-    if (eInfo.message.isNotEmpty) {
-      utils.showToast(message: eInfo.message);
+    
+    // Show user-friendly error messages
+    String userMessage = eInfo.message;
+    if (eInfo.code == -8 || eInfo.code == -5 || eInfo.code == -6 || eInfo.code == -7) {
+      userMessage = "Please check your internet connection and try again";
+    } else if (eInfo.code == -2 || eInfo.code == -3 || eInfo.code == -4) {
+      userMessage = "Connection timeout. Please try again";
+    }
+    
+    if (userMessage.isNotEmpty) {
+      utils.showToast(message: userMessage);
     }
   }
 

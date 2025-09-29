@@ -1,5 +1,5 @@
 name: chatsy
-version: 6.2.9+2
+version: 6.2.9+108
 publish_to: none
 description: A new Flutter project.
 environment:
@@ -38,7 +38,7 @@ dependencies:
   in_app_purchase: ^3.1.7
   flutter_inapp_purchase: ^5.3.1
   webview_flutter: ^4.2.2
-  image_cropper: ^9.1.0
+  image_cropper: ^11.0.0
   device_info_plus:
   camera: ^0.11.0+2
   flutter_localization: ^0.3.2

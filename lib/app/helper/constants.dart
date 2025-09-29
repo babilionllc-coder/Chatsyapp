@@ -128,20 +128,38 @@ class Constants {
   // Check if API keys are properly configured
   static bool areApiKeysConfigured() {
     return chatToken != 'YOUR_OPENAI_API_KEY_HERE' &&
+           chatToken.isNotEmpty &&
            deepSeekApiKey != 'YOUR_DEEPSEEK_API_KEY_HERE' &&
-           elevenLabVoiceKey != 'YOUR_ELEVENLABS_API_KEY_HERE';
+           deepSeekApiKey.isNotEmpty &&
+           elevenLabVoiceKey != 'YOUR_ELEVENLABS_API_KEY_HERE' &&
+           elevenLabVoiceKey.isNotEmpty;
   }
   
   // Get API key status for debugging
   static Map<String, bool> getApiKeyStatus() {
     return {
-      'openai': chatToken != 'YOUR_OPENAI_API_KEY_HERE',
-      'deepseek': deepSeekApiKey != 'YOUR_DEEPSEEK_API_KEY_HERE',
-      'elevenlabs': elevenLabVoiceKey != 'YOUR_ELEVENLABS_API_KEY_HERE',
-      'gemini': geminiKey != 'YOUR_GEMINI_API_KEY_HERE',
-      'youtube': youtubeKey != 'YOUR_YOUTUBE_API_KEY_HERE',
-      'weather': weatherKey != 'YOUR_WEATHER_API_KEY_HERE',
+      'openai': chatToken != 'YOUR_OPENAI_API_KEY_HERE' && chatToken.isNotEmpty,
+      'deepseek': deepSeekApiKey != 'YOUR_DEEPSEEK_API_KEY_HERE' && deepSeekApiKey.isNotEmpty,
+      'elevenlabs': elevenLabVoiceKey != 'YOUR_ELEVENLABS_API_KEY_HERE' && elevenLabVoiceKey.isNotEmpty,
+      'gemini': geminiKey != 'YOUR_GEMINI_API_KEY_HERE' && geminiKey.isNotEmpty,
+      'youtube': youtubeKey != 'YOUR_YOUTUBE_API_KEY_HERE' && youtubeKey.isNotEmpty,
+      'weather': weatherKey != 'YOUR_WEATHER_API_KEY_HERE' && weatherKey.isNotEmpty,
     };
+  }
+  
+  // Check if backend is reachable
+  static Future<bool> isBackendReachable() async {
+    try {
+      final dio = Dio(BaseOptions(
+        connectTimeout: const Duration(seconds: 10),
+        receiveTimeout: const Duration(seconds: 10),
+      ));
+      final response = await dio.get(healthUrl);
+      return response.statusCode == 200;
+    } catch (e) {
+      printAction("❌ Backend unreachable: $e");
+      return false;
+    }
   }
 
   ///TODO: Tools Type

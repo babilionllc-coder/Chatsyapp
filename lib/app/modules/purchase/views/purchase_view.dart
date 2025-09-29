@@ -23,12 +23,9 @@ class LightSystemUiOverlayStyle extends AnnotatedRegion<SystemUiOverlayStyle> {
   const LightSystemUiOverlayStyle({super.key, required super.child, super.value = style});
 
   static const SystemUiOverlayStyle style = SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.transparent,
     systemNavigationBarIconBrightness: Brightness.light,
-    systemNavigationBarDividerColor: Colors.transparent,
   );
 }
 

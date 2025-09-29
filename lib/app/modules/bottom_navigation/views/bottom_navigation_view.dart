@@ -210,11 +210,10 @@ class BottomNavigationView extends GetView<BottomNavigationController> {
                   },
                 ),*/
                 systemOverlayStyle: SystemUiOverlayStyle(
-                  statusBarColor: AppColors.transparent,
                   statusBarIconBrightness:
                       isLight
                           ? Brightness.dark
-                          : Brightness.light, // status bar color
+                          : Brightness.light,
                   statusBarBrightness:
                       isLight ? Brightness.light : Brightness.dark,
                 ),

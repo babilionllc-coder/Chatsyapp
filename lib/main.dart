@@ -133,8 +133,10 @@ Future<void> main() async {
     if (!kIsWeb) {
       FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(!kDebugMode);
     }
+    printAction("✅ Firebase initialized successfully");
   } catch (e) {
-    print('Firebase initialization error: $e');
+    printAction("❌ Firebase initialization failed: $e");
+    // Continue app initialization even if Firebase fails
   }
 
   FlutterError.onError = (errorDetails) {
@@ -161,6 +163,7 @@ Future<void> main() async {
     printAction("🔐 Main: Secure API keys initialized");
   } catch (e) {
     printAction("❌ Main: Error initializing secure API keys - $e");
+    // Continue app initialization even if API keys fail
   }
 
   bool darkLight = getStorageData.readBool(getStorageData.isLight) ?? true;
@@ -194,10 +197,11 @@ Future<void> main() async {
   runApp(MyApp());
 
   printAction("==================islight----------$isLight");
+  // Use modern edge-to-edge approach instead of deprecated statusBarColor
   SystemChrome.setSystemUIOverlayStyle(
     SystemUiOverlayStyle(
-      statusBarColor: AppColors.transparent,
       statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
+      statusBarBrightness: isLight ? Brightness.light : Brightness.dark,
     ),
   );
   Loading.loadingInit();
@@ -475,11 +479,8 @@ class DarkSystemOverlayStyle extends AnnotatedRegion<SystemUiOverlayStyle> {
   });
 
   static const style = SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
     statusBarBrightness: Brightness.dark,
-    systemNavigationBarColor: Color(0xFF222423),
-    systemNavigationBarDividerColor: Color(0xFF222423),
     systemNavigationBarIconBrightness: Brightness.light,
   );
 }
@@ -492,11 +493,8 @@ class LightSystemOverlayStyle extends AnnotatedRegion<SystemUiOverlayStyle> {
   });
 
   static const style = SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.dark,
     statusBarBrightness: Brightness.light,
-    systemNavigationBarColor: Colors.white,
-    systemNavigationBarDividerColor: Colors.white,
     systemNavigationBarIconBrightness: Brightness.dark,
   );
 }

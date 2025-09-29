@@ -111,8 +111,6 @@ class _CommonScreenState extends State<CommonScreen> {
                   systemOverlayStyle:
                       widget.systemOverlayStyle ??
                       SystemUiOverlayStyle(
-                        statusBarColor: AppColors.transparent,
-                        systemNavigationBarColor: AppColors().whiteAndDark,
                         statusBarIconBrightness: isLight ? Brightness.dark : Brightness.light,
                         statusBarBrightness: isLight ? Brightness.light : Brightness.dark,
                       ),

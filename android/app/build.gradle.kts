@@ -11,7 +11,7 @@ plugins {
 
 android {
     namespace = "com.aichatsy.app"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "27.0.12077973"
 
     compileOptions {
@@ -28,9 +28,9 @@ android {
         applicationId = "com.aichatsy.app"
         multiDexEnabled = true
         minSdk = 24
-        targetSdk = 35
-        versionCode = 106
-        versionName = "1.3.5"
+        targetSdk = 36
+        versionCode = 108
+        versionName = "1.3.7"
     }
 
     signingConfigs {

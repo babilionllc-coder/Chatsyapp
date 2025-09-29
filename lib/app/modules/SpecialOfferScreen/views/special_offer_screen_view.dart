@@ -36,11 +36,8 @@ class SpecialOfferScreenView extends GetView<SpecialOfferScreenController> {
             CommonScreen(
               backgroundColor: AppColors.transparent,
               systemOverlayStyle: SystemUiOverlayStyle(
-                statusBarColor: AppColors.transparent,
                 statusBarIconBrightness: (Platform.isAndroid) ? Brightness.light : Brightness.dark,
                 statusBarBrightness: (Platform.isAndroid) ? Brightness.light : Brightness.dark,
-                systemNavigationBarColor: AppColors.white,
-                systemNavigationBarDividerColor: Colors.transparent,
                 systemNavigationBarIconBrightness: Brightness.dark,
               ),
               leading: Obx(() {
