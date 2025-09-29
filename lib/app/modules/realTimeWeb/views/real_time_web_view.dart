@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:chatsy/app/helper/all_imports.dart';
+import 'package:chatsy/app/helper/font_family.dart';
+import 'package:chatsy/app/Localization/local_language.dart';
 import '../controllers/real_time_web_controller.dart';
 
 class RealTimeWebView extends GetView<RealTimeWebController> {
@@ -63,7 +65,7 @@ class RealTimeWebView extends GetView<RealTimeWebController> {
                         onPressed: controller.clearSearch,
                       )
                     : Icon(
-                        Icons.real_time_search,
+                        Icons.search,
                         color: AppColors().iconColor,
                       )),
                 border: InputBorder.none,

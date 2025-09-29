@@ -49,7 +49,7 @@ class ApiKeyManager {
   
   // Validate API keys
   static void _validateApiKeys() {
-    final requiredKeys = ['openai', 'deepseek', 'elevenlabs'];
+    final requiredKeys = ['openai', 'deepseek', 'elevenlabs', 'gemini', 'youtube', 'tavily'];
     List<String> missingKeys = [];
     
     for (String key in requiredKeys) {

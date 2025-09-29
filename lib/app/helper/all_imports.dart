@@ -5,6 +5,8 @@ export 'package:chatsy/app/common_widget/app_text.dart';
 export 'package:chatsy/app/helper/app_colors.dart';
 export 'package:chatsy/app/helper/constants.dart';
 export 'package:chatsy/app/helper/utils.dart';
+export 'package:chatsy/app/helper/font_family.dart';
+export 'package:chatsy/app/Localization/local_language.dart';
 // export 'package:chatsy/app/modules/newChat/component/chat_api.dart';
 export 'package:chatsy/app/modules/newChat/component/chat_api_dummay.dart';
 export 'package:dio/dio.dart';

@@ -1,0 +1,12 @@
+{
+  "status": true,
+  "message": "Get all users endpoint ready",
+  "data": {
+    "endpoint": "/api/users/all",
+    "method": "GET",
+    "description": "Get all users endpoint (admin)"
+  }
+}
+
+
+

@@ -1,0 +1,12 @@
+{
+  "status": true,
+  "message": "Login endpoint ready",
+  "data": {
+    "endpoint": "/api/user/login",
+    "method": "POST",
+    "description": "User authentication endpoint"
+  }
+}
+
+
+

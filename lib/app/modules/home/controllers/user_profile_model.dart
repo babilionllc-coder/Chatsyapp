@@ -211,10 +211,19 @@ class VoiceDtl {
 
 @JsonEnum()
 enum ModelType {
-  @JsonValue('chat_gpt_mini')
+  @JsonValue('gpt_5_turbo')
+  gpt5Turbo,
+
+  @JsonValue('gpt_5_pro')
+  gpt5Pro,
+
+  @JsonValue('gpt_5_max')
+  gpt5Max,
+
+  @JsonValue('chatgpt_mini')
   chatGPTMini,
 
-  @JsonValue('chat_gpt_4o')
+  @JsonValue('chatgpt_4o')
   chatGPT4o,
 
   @JsonValue('gemini')

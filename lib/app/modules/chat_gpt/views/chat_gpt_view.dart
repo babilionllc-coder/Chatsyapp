@@ -935,8 +935,9 @@ class AiModelWidget extends GetView<ChatGptController> {
 
   Future<void> onTap() async {
     var key = switch (model.modelType) {
-      ModelType.chatGPTMini => getStorageData.chatGPT,
-      ModelType.chatGPT4o => getStorageData.gpt4o,
+      ModelType.gpt5Turbo => getStorageData.gpt5Turbo,
+      ModelType.gpt5Pro => getStorageData.gpt5Pro,
+      ModelType.gpt5Max => getStorageData.gpt5Max,
       ModelType.gemini => getStorageData.gemini,
       ModelType.deepSeek => getStorageData.deepseek,
       _ => '',
@@ -953,20 +954,12 @@ class AiModelWidget extends GetView<ChatGptController> {
           },
           icon: model.logo ?? '',
           title: switch (model.modelType) {
-            ModelType.chatGPTMini => AppStrings.T.chatGPT,
-            ModelType.chatGPT4o => AppStrings.T.GPT4o,
+            ModelType.gpt5Turbo => 'GPT-5 Turbo',
+            ModelType.gpt5Pro => 'GPT-5 Pro',
+            ModelType.gpt5Max => 'GPT-5 Max',
             ModelType.gemini => AppStrings.T.gemini,
             ModelType.deepSeek => AppStrings.T.deepseek,
             _ => '',
-            /* ModelType.summarizeDoc => throw UnimplementedError(),
-          ModelType.summarizeWeb => model.name ?? AppStrings.T.summarizeWeb,
-          ModelType.imageScan => model.name ?? AppStrings.T.imageScan,
-          ModelType.textScan => model.name ?? AppStrings.T.textScan,
-          ModelType.imageGeneration =>
-            model.name ?? AppStrings.T.imageGeneration,
-          ModelType.youtubeSummarize =>
-            model.name ?? AppStrings.T.youtubeSummary,
-          ModelType.realTimeWeb => throw UnimplementedError(), */
           },
           description: switch (model.modelType) {
             ModelType.chatGPTMini => AppStrings.T.chatGPTIsYourAIAssistant,

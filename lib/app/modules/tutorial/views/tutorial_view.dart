@@ -567,7 +567,7 @@ class TutorialView extends StatelessWidget {
             width: double.infinity,
             child: ElevatedButton(
               onPressed: () {
-                controller.hideWhatsNew();
+                Get.find<TutorialController>().hideWhatsNew();
                 Get.toNamed(item.actionRoute);
               },
               style: ElevatedButton.styleFrom(
@@ -613,7 +613,7 @@ class TutorialView extends StatelessWidget {
             flex: 2,
             child: ElevatedButton(
               onPressed: () {
-                controller.hideWhatsNew();
+                Get.find<TutorialController>().hideWhatsNew();
                 Get.toNamed('/home');
               },
               style: ElevatedButton.styleFrom(

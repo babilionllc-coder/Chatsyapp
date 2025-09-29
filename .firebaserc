@@ -1,0 +1,20 @@
+{
+  "projects": {
+    "default": "ai-chatsy-390411",
+    "aichatsy": "ai-chatsy-390411"
+  },
+  "targets": {
+    "ai-chatsy-390411": {
+      "hosting": {
+        "main": [
+          "ai-chatsy-390411"
+        ],
+        "custom": [
+          "aichatsy"
+        ]
+      }
+    }
+  }
+}
+
+

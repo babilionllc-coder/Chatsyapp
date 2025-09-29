@@ -1,0 +1,16 @@
+{
+  "status": true,
+  "message": "CHATSY Backend is running!",
+  "data": {
+    "server": "Namecheap PHP Backend",
+    "timestamp": "2025-09-28T17:40:00.000Z",
+    "version": "1.0.0",
+    "database": "aichocka_aichatsy_5",
+    "endpoints": {
+      "health": "/api/health.json",
+      "login": "/api/user/login.php",
+      "register": "/api/user/register.php",
+      "chat": "/api/chat/send.php"
+    }
+  }
+}

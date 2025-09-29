@@ -1,0 +1,12 @@
+{
+  "status": true,
+  "message": "Registration endpoint ready",
+  "data": {
+    "endpoint": "/api/user/register",
+    "method": "POST",
+    "description": "User registration endpoint"
+  }
+}
+
+
+

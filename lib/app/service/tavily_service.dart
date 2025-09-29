@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 
 class TavilyService {
   static const String _baseUrl = 'https://api.tavily.com';
-  static const String _apiKey = Constants.tavilyApiKey;
+  static String get _apiKey => Constants.tavilyApiKey;
   
   // Search web with Tavily API
   static Future<List<Map<String, dynamic>>> searchWeb({

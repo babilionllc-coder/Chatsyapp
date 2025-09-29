@@ -1,0 +1,12 @@
+{
+  "status": true,
+  "message": "Send message endpoint ready",
+  "data": {
+    "endpoint": "/api/chat/send",
+    "method": "POST",
+    "description": "Send chat message endpoint"
+  }
+}
+
+
+

@@ -29,27 +29,24 @@ android {
         multiDexEnabled = true
         minSdk = 24
         targetSdk = 35
-        versionCode = 103
-        versionName = "1.3.2"
+        versionCode = 105
+        versionName = "1.3.4"
+    }
+
+    signingConfigs {
+        create("release") {
+            storeFile = file("../jks/aichatsy_jks.jks")
+            keyAlias = "aichatsy"
+            keyPassword = "Aichatsy@1234"
+            storePassword = "Aichatsy@1234"
+        }
     }
 
     buildTypes {
         release {
             isMinifyEnabled = false
             isShrinkResources = false
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
-
-            }
-    }
-
-    signingConfigs {
-        create("release") {
-            storeFile = file("./android/jks/aichatsy_jks.jks")
-            keyAlias = "aichatsy"
-            keyPassword = "Aichatsy@1234"
-            storePassword = "Aichatsy@1234"
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

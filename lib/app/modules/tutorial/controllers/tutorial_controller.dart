@@ -316,8 +316,8 @@ class TutorialController extends GetxController {
     tutorialProgress.value = 1.0;
     
     // Mark tutorial as completed
-    getStorageData.saveData('tutorial_completed', true);
-    getStorageData.saveData('tutorial_completed_date', DateTime.now().toIso8601String());
+    getStorageData.saveBool('tutorial_completed', true);
+    getStorageData.saveString('tutorial_completed_date', DateTime.now().toIso8601String());
     
     printAction("🎓 Tutorial completed successfully");
   }
@@ -333,8 +333,8 @@ class TutorialController extends GetxController {
     showWhatsNew.value = false;
     
     // Mark current version as seen
-    getStorageData.saveData('last_seen_version', '1.5.0');
-    getStorageData.saveData('last_seen_date', DateTime.now().toIso8601String());
+    getStorageData.saveString('last_seen_version', '1.5.0');
+    getStorageData.saveString('last_seen_date', DateTime.now().toIso8601String());
     
     printAction("🆕 What's New dialog closed");
   }
@@ -361,7 +361,7 @@ class TutorialController extends GetxController {
   
   // Mark feature as seen
   void markFeatureAsSeen(String featureId) {
-    getStorageData.saveData('feature_seen_$featureId', true);
+    getStorageData.saveBool('feature_seen_$featureId', true);
   }
   
   // Check if feature is new

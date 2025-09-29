@@ -150,21 +150,22 @@ class SummarizeWebsiteController extends GetxController {
       String enhancedPrompt = _buildEnhancedWebsitePrompt();
       
       // Call GPT-5 with advanced analysis
-      await ChatApi.chatGPTAPI(
-        message: enhancedPrompt,
-        modelType: ModelType.chatGPT,
+      ChatApi().apiCalling(
+        textQuestion: enhancedPrompt,
+        chatItem: RxList<ChatItem>(),
+        scrollController: ScrollController(),
+        modelType: ModelType.chatGPT4o,
         isRealTime: true,
         chatGPTAddData: null,
         systemText: _getWebsiteAnalysisSystemPrompt(),
         documentText: documentText,
         modelPrompt: null,
         fileName: urlQuestion,
-        fileText: enhancedPrompt,
       );
       
     } catch (e) {
       printAction("Website analysis error: $e");
-      utils.showSnackBar("Error analyzing website: $e");
+      utils.showToast(message: "Error analyzing website: $e");
     } finally {
       isLoading.value = false;
     }
@@ -328,16 +329,17 @@ Always prioritize user value and actionable insights in your website analysis.
         customPrompt = "Provide a comprehensive analysis of this website.";
     }
     
-    await ChatApi.chatGPTAPI(
-      message: customPrompt,
-      modelType: ModelType.chatGPT,
+    ChatApi().apiCalling(
+      textQuestion: customPrompt,
+      chatItem: RxList<ChatItem>(),
+      scrollController: ScrollController(),
+      modelType: ModelType.chatGPT4o,
       isRealTime: true,
       chatGPTAddData: null,
       systemText: _getWebsiteAnalysisSystemPrompt(),
       documentText: documentText,
       modelPrompt: null,
       fileName: urlQuestion,
-      fileText: customPrompt,
     );
   }
 }

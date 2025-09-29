@@ -1,0 +1,12 @@
+{
+  "status": true,
+  "message": "Chat history endpoint ready",
+  "data": {
+    "endpoint": "/api/chat/history",
+    "method": "GET",
+    "description": "Get chat history endpoint"
+  }
+}
+
+
+

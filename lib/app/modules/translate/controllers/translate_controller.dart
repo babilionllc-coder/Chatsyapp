@@ -6,6 +6,7 @@ import '../../../Localization/local_language.dart';
 import '../../../common_widget/comman_text_feild_bottom_sheet.dart';
 import '../../../common_widget/common_show_model_bottom_sheet.dart';
 import '../../../helper/all_imports.dart';
+import '../../home/controllers/user_profile_model.dart';
 import '../../../helper/get_storage_data.dart';
 import '../../../helper/image_path.dart';
 import '../../home/controllers/all_prompt_model.dart';
@@ -246,21 +247,22 @@ class TranslateController extends GetxController with WidgetsBindingObserver {
       String enhancedPrompt = _buildEnhancedTranslationPrompt(text);
       
       // Call GPT-5 with advanced translation
-      await ChatApi.chatGPTAPI(
-        message: enhancedPrompt,
-        modelType: ModelType.chatGPT,
+      ChatApi().apiCalling(
+        textQuestion: enhancedPrompt,
+        chatItem: RxList<ChatItem>(),
+        scrollController: ScrollController(),
+        modelType: ModelType.chatGPT4o,
         isRealTime: true,
         chatGPTAddData: null,
         systemText: _getTranslationSystemPrompt(),
         documentText: null,
         modelPrompt: null,
         fileName: "translation",
-        fileText: enhancedPrompt,
       );
       
     } catch (e) {
       printAction("Translation error: $e");
-      utils.showSnackBar("Error translating text: $e");
+      utils.showToast(message: "Error translating text: $e");
     } finally {
       isLoading.value = false;
     }
@@ -396,16 +398,17 @@ Always prioritize accuracy, naturalness, and cultural appropriateness in your tr
         customPrompt = "Translate the following text to ${toLanguage.value?.name ?? 'target language'}: $text";
     }
     
-    await ChatApi.chatGPTAPI(
-      message: customPrompt,
-      modelType: ModelType.chatGPT,
+    ChatApi().apiCalling(
+      textQuestion: customPrompt,
+      chatItem: RxList<ChatItem>(),
+      scrollController: ScrollController(),
+      modelType: ModelType.chatGPT4o,
       isRealTime: true,
       chatGPTAddData: null,
       systemText: _getTranslationSystemPrompt(),
       documentText: null,
       modelPrompt: null,
       fileName: "translation",
-      fileText: customPrompt,
     );
   }
   

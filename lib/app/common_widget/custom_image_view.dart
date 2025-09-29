@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chatsy/app/helper/app_colors.dart';
 import 'package:chatsy/app/helper/image_path.dart';
+import 'package:chatsy/app/helper/safe_image_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -103,9 +104,8 @@ class ImageView extends StatelessWidget {
         fit: fit,
         errorWidget: errorWidget,
       ),
-      ImageType.network => NetworkImage(
-        imagePath,
-        color: color,
+      ImageType.network => SafeImageWidget(
+        imageUrl: imagePath,
         fit: fit,
         errorWidget: errorWidget,
       ),

@@ -158,22 +158,23 @@ class YoutubeSummaryController extends GetxController with WidgetsBindingObserve
       String enhancedPrompt = _buildEnhancedAnalysisPrompt();
       
       // Call GPT-5 with advanced analysis
-      await ChatApi.chatGPTAPI(
-        message: enhancedPrompt,
-        modelType: ModelType.chatGPT,
+      ChatApi().apiCalling(
+        textQuestion: enhancedPrompt,
+        chatItem: RxList<ChatItem>(),
+        scrollController: ScrollController(),
+        modelType: ModelType.chatGPT4o,
         isRealTime: true,
         chatGPTAddData: null,
         systemText: _getYouTubeAnalysisSystemPrompt(),
         documentText: null,
         modelPrompt: null,
         fileName: title.value,
-        fileText: enhancedPrompt,
         link: url.value,
       );
       
     } catch (e) {
       printAction("YouTube analysis error: $e");
-      utils.showSnackBar("Error analyzing video: $e");
+      utils.showToast(message: "Error analyzing video: $e");
     } finally {
       isLoading.value = false;
     }
@@ -310,16 +311,17 @@ Always prioritize user value and actionable insights in your analysis.
         customPrompt = "Provide a comprehensive summary of this YouTube video.";
     }
     
-    await ChatApi.chatGPTAPI(
-      message: customPrompt,
-      modelType: ModelType.chatGPT,
+    ChatApi().apiCalling(
+      textQuestion: customPrompt,
+      chatItem: RxList<ChatItem>(),
+      scrollController: ScrollController(),
+      modelType: ModelType.chatGPT4o,
       isRealTime: true,
       chatGPTAddData: null,
       systemText: _getYouTubeAnalysisSystemPrompt(),
       documentText: null,
       modelPrompt: null,
       fileName: title.value,
-      fileText: customPrompt,
       link: url.value,
     );
   }

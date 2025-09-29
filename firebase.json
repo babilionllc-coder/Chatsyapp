@@ -1,1 +1,74 @@
-{"flutter":{"platforms":{"android":{"default":{"projectId":"ai-chatsy-390411","appId":"1:50566955447:android:3c01e936822367bcb56832","fileOutput":"android/app/google-services.json"}},"ios":{"default":{"projectId":"ai-chatsy-390411","appId":"1:50566955447:ios:540d7e88f4a602c9b56832","uploadDebugSymbols":true,"fileOutput":"ios/Runner/GoogleService-Info.plist"}},"dart":{"lib/firebase_options.dart":{"projectId":"ai-chatsy-390411","configurations":{"android":"1:50566955447:android:3c01e936822367bcb56832","ios":"1:50566955447:ios:540d7e88f4a602c9b56832"}}}}}}
+{
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs18"
+  },
+  "hosting": [
+    {
+      "target": "main",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": "api"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "custom",
+      "public": "public",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "/api/**",
+          "function": "api"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ],
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "ai-chatsy-390411",
+          "appId": "1:50566955447:android:3c01e936822367bcb56832",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "ai-chatsy-390411",
+          "appId": "1:50566955447:ios:540d7e88f4a602c9b56832",
+          "uploadDebugSymbols": true,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "ai-chatsy-390411",
+          "configurations": {
+            "android": "1:50566955447:android:3c01e936822367bcb56832",
+            "ios": "1:50566955447:ios:540d7e88f4a602c9b56832"
+          }
+        }
+      }
+    }
+  }
+}

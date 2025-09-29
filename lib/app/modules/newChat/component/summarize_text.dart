@@ -8,7 +8,7 @@ import '../models/suggestion_model.dart';
 class SummarizeText {
   static final client = OpenAIClient(apiKey: Constants.chatToken);
 
-  static String gptModel = "gpt-5";
+  static String gptModel = "gpt-5-pro";
   static String suggestionSystemPrompt =
       """You are part of the backend of an AI chatbot product. You, given the previous line of questioning of a chatbot user, infer the next questions that the user might want to ask. You are a text processor, producing strictly-formatted output for an API.
 // Input to expect
@@ -66,7 +66,7 @@ Predict the next questions the user may want to ask, giving four brief examples 
 
       String gptModel = switch (modelType) {
         ModelType.deepSeek => 'deepseek-chat',
-        _ => "gpt-5",
+        _ => "gpt-5-pro",
       };
 
       CreateChatCompletionResponse response = await client.createChatCompletion(

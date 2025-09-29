@@ -7,6 +7,7 @@ import '../../../common_widget/error_and_update_dialog.dart';
 import '../../../helper/Global.dart';
 import '../../bottom_navigation/controllers/bottom_navigation_controller.dart';
 import '../../home/controllers/user_profile_model.dart';
+import '../../newChat/controllers/new_chat_controller.dart';
 import '../../newChat/models/phm_id_model.dart';
 
 class ImageScanController extends GetxController with WidgetsBindingObserver {
@@ -146,7 +147,7 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
         "user_id": getStorageData.readString(getStorageData.userId),
         "ai_model":
             (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-                    ? "gpt-5"
+                    ? "gpt-5-pro"
                     : Get.put(BottomNavigationController())
                             .selectAiModelList[(getStorageData.containKey(
                                   getStorageData.selectModelIndex,
@@ -159,7 +160,7 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
                                 )
                                 : 0]
                             .model ??
-                        "gpt-5")
+                        "gpt-5-pro")
                 .toString(),
         "title": "Image Scan",
         "is_edit": isRegenerate ? "1" : "0",
@@ -258,21 +259,22 @@ class ImageScanController extends GetxController with WidgetsBindingObserver {
       String enhancedPrompt = _buildEnhancedImagePrompt();
       
       // Call GPT-5 with advanced image analysis
-      await ChatApi.chatGPTAPI(
-        message: enhancedPrompt,
-        modelType: ModelType.chatGPT,
+      ChatApi().apiCalling(
+        textQuestion: enhancedPrompt,
+        chatItem: RxList<ChatItem>(),
+        scrollController: ScrollController(),
+        modelType: ModelType.chatGPT4o,
         isRealTime: true,
         chatGPTAddData: null,
         systemText: _getImageAnalysisSystemPrompt(),
         documentText: null,
         modelPrompt: null,
         fileName: "image_analysis",
-        fileText: enhancedPrompt,
       );
       
     } catch (e) {
       printAction("Image analysis error: $e");
-      utils.showSnackBar("Error analyzing image: $e");
+      utils.showToast(message: "Error analyzing image: $e");
     } finally {
       isLoading.value = false;
     }
@@ -383,16 +385,17 @@ Always prioritize accuracy, detail, and user value in your image analysis.
         customPrompt = "Provide a comprehensive analysis of this image.";
     }
     
-    await ChatApi.chatGPTAPI(
-      message: customPrompt,
-      modelType: ModelType.chatGPT,
+    ChatApi().apiCalling(
+      textQuestion: customPrompt,
+      chatItem: RxList<ChatItem>(),
+      scrollController: ScrollController(),
+      modelType: ModelType.chatGPT4o,
       isRealTime: true,
       chatGPTAddData: null,
       systemText: _getImageAnalysisSystemPrompt(),
       documentText: null,
       modelPrompt: null,
       fileName: "image_analysis",
-      fileText: customPrompt,
     );
   }
 }

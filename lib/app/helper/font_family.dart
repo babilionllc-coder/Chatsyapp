@@ -5,6 +5,7 @@ class FontFamily {
   static const helveticaBold = "Helvetica-Bold";
   static const helveticaLight = "Helvetica-Light";
   static const helveticaRegular = "Helvetica-Regular";
+  static const helveticaMedium = "Helvetica-Medium";
 }
 
 const _helveticaAdvancedMethod = "Helvetica-Advanced-Method";

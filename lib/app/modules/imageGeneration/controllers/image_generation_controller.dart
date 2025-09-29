@@ -670,7 +670,7 @@ class ImageGenerationController extends GetxController {
           userId: uid,
           question: question,
           size: selectSizeIndex.value,
-          aiModel: aiModel ?? "gpt-5",
+          aiModel: aiModel ?? "gpt-5-pro",
           phmId: askQuestionData.isNotEmpty ? askQuestionData.last.phmId : null,
           isEdit: isRegenerate ? "1" : "0",
           filterType: styleName,

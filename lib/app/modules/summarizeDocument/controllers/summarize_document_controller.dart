@@ -110,21 +110,22 @@ class SummarizeDocumentController extends GetxController with WidgetsBindingObse
       String enhancedPrompt = _buildEnhancedDocumentPrompt();
       
       // Call GPT-5 with advanced analysis
-      await ChatApi.chatGPTAPI(
-        message: enhancedPrompt,
-        modelType: ModelType.chatGPT,
+      ChatApi().apiCalling(
+        textQuestion: enhancedPrompt,
+        chatItem: RxList<ChatItem>(),
+        scrollController: ScrollController(),
+        modelType: ModelType.chatGPT4o,
         isRealTime: true,
         chatGPTAddData: null,
         systemText: _getDocumentAnalysisSystemPrompt(),
         documentText: documentText,
         modelPrompt: null,
         fileName: fileName.value,
-        fileText: enhancedPrompt,
       );
       
     } catch (e) {
       printAction("Document analysis error: $e");
-      utils.showSnackBar("Error analyzing document: $e");
+      utils.showToast(message: "Error analyzing document: $e");
     } finally {
       isLoading.value = false;
     }
@@ -277,16 +278,17 @@ Always prioritize user value and actionable insights in your analysis.
         customPrompt = "Provide a comprehensive analysis of this document.";
     }
     
-    await ChatApi.chatGPTAPI(
-      message: customPrompt,
-      modelType: ModelType.chatGPT,
+    ChatApi().apiCalling(
+      textQuestion: customPrompt,
+      chatItem: RxList<ChatItem>(),
+      scrollController: ScrollController(),
+      modelType: ModelType.chatGPT4o,
       isRealTime: true,
       chatGPTAddData: null,
       systemText: _getDocumentAnalysisSystemPrompt(),
       documentText: documentText,
       modelPrompt: null,
       fileName: fileName.value,
-      fileText: customPrompt,
     );
   }
 }

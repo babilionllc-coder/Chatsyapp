@@ -222,6 +222,10 @@ Future<void> main() async {
       await AppvestorBillingStats.setAppId(
         apId: "b0-362dacba-ced6-4660-baa8-0f6da0a3756b",
       );
+    // Explicitly set ACID to prevent InitException
+    // await AppvestorBillingStats.setAcid(
+    //   acid: "a1-5d541928-0a7f-4ffa-b0e5-cff62d0cf437",
+    // );
 
       FirebaseAnalytics.instance.logEvent(name: 'appvestore_initialized');
       AppvestorBillingStats.firebaseEvents.listen((event) {

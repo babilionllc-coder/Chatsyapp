@@ -4,6 +4,7 @@ import '../../../api_repository/api_function.dart';
 import '../../../api_repository/loading.dart';
 import '../../../common_widget/error_and_update_dialog.dart';
 import '../../../helper/all_imports.dart';
+import '../../../helper/Global.dart';
 import '../models/get_voice_model.dart';
 
 class VoicePageController extends GetxController {
@@ -76,12 +77,13 @@ class VoicePageController extends GetxController {
   @override
   void onInit() {
     if (Constants.isShowElevenLab == "1") {
-      getVoiceListAPI();
+      // Load all ElevenLabs voices and select top 3
+      fetchElevenLabsVoices();
     }
     super.onInit();
   }
   
-  // Enhanced method to fetch voices directly from ElevenLabs
+  // Enhanced method to fetch voices directly from ElevenLabs and select top 3
   Future<void> fetchElevenLabsVoices() async {
     try {
       // Initialize ElevenLabs API
@@ -93,20 +95,30 @@ class VoicePageController extends GetxController {
       printAction("=== ElevenLabs Voices Available ===");
       printAction("Total voices: ${voices.length}");
       
-      for (int i = 0; i < voices.length; i++) {
-        final voice = voices[i];
+      // Select the top 3 best voices for the app
+      List<String> topVoiceIds = [
+        "EXAVITQu4vr4xnSDxMaL", // Sarah - Professional female voice
+        "2EiwWnXFnvU5JabPnv8n", // Clyde - Character male voice
+        "CwhRBWXzGAHq8TQ4Fs17", // Roger - Casual male voice
+      ];
+      
+      // Filter to get only the top 3 voices
+      final selectedVoices = voices.where((voice) => topVoiceIds.contains(voice.voiceId)).toList();
+      
+      printAction("=== Selected Top 3 Voices ===");
+      for (int i = 0; i < selectedVoices.length; i++) {
+        final voice = selectedVoices[i];
         printAction("Voice ${i + 1}:");
         printAction("  - Name: ${voice.name}");
         printAction("  - ID: ${voice.voiceId}");
         printAction("  - Category: ${voice.category}");
         printAction("  - Language: ${voice.language ?? 'Not specified'}");
-        printAction("  - Preview URL: ${voice.previewUrl}");
         printAction("  - Description: ${voice.description ?? 'No description'}");
         printAction("  ---");
       }
       
       // Convert ElevenLabs voices to app format
-      List<VoiceDtl> elevenLabsVoices = voices.map((voice) => VoiceDtl(
+      List<VoiceDtl> elevenLabsVoices = selectedVoices.map((voice) => VoiceDtl(
         voiceId: voice.voiceId,
         name: voice.name,
         elevenLabId: voice.voiceId,
@@ -115,14 +127,14 @@ class VoicePageController extends GetxController {
         isSelected: voice.voiceId == Constants.elevenLabId ? "1" : "0",
       )).toList();
       
-      // Update voice list with ElevenLabs voices
+      // Update voice list with top 3 ElevenLabs voices
       voiceList.value = elevenLabsVoices;
       
-      printAction("Updated voice list with ${voiceList.length} ElevenLabs voices");
+      printAction("Updated voice list with ${voiceList.length} top ElevenLabs voices");
       
     } catch (e) {
       printAction("Error fetching ElevenLabs voices: $e");
-      utils.showSnackBar("Error fetching voices: $e");
+      utils.showToast(message: "Error fetching voices: $e");
     }
   }
 }

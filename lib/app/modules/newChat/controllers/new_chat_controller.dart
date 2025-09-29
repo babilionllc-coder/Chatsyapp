@@ -1153,7 +1153,7 @@ class NewChatController extends GetxController
   String get aiModelName =>
       modelTypeForDropDown?.value?.model ??
       (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-          ? "gpt-5"
+          ? "gpt-5-pro"
           : Get.put(BottomNavigationController())
                   .selectAiModelList[(getStorageData.containKey(
                         getStorageData.selectModelIndex,
@@ -1166,7 +1166,7 @@ class NewChatController extends GetxController
                       )
                       : 0]
                   .model ??
-              "gpt-5");
+              "gpt-5-pro");
 
   ModelType? get aiModelType {
     if (assistantsData.model != null) {

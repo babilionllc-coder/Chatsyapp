@@ -6,11 +6,14 @@ class DeepSeekMathView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<DeepSeekMathController>(
-      init: DeepSeekMathController(),
+    return GetBuilder<DeepseekMathController>(
+      init: DeepseekMathController(),
       builder: (controller) {
-        return CommonScreen(
-          title: '🧮 DeepSeek Math',
+        return Scaffold(
+          appBar: AppBar(
+            title: Text('🧮 DeepSeek Math'),
+            backgroundColor: AppColors().backgroundColor1,
+          ),
           backgroundColor: AppColors().backgroundColor1,
           body: SingleChildScrollView(
             padding: EdgeInsets.all(16.px),
@@ -36,8 +39,8 @@ class DeepSeekMathView extends StatelessWidget {
     );
   }
 
-  Widget _buildMathProblemInput(DeepSeekMathController controller) {
-    return ModernCard(
+  Widget _buildMathProblemInput(DeepseekMathController controller) {
+    return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -93,28 +96,32 @@ class DeepSeekMathView extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                child: Obx(() => CommonButton(
-                  onTap: controller.isLoading.value ? null : () {
-                    // Solve problem
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : () {
+                    controller.solveMathProblem(problem: controller.problemInputController.text);
                   },
-                  title: 'Solve Problem',
-                  buttonColor: AppColors.primary,
-                  textColor: AppColors.white,
-                  borderRadius: 10.px,
-                  verticalPadding: 12.px,
+                  child: Text('Solve Problem'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.px)),
+                    padding: EdgeInsets.symmetric(vertical: 12.px),
+                  ),
                 )),
               ),
               SizedBox(width: 12.px),
               Expanded(
-                child: Obx(() => CommonButton(
-                  onTap: controller.isLoading.value ? null : () {
-                    // Calculate expression
+                child: Obx(() => ElevatedButton(
+                  onPressed: controller.isLoading.value ? null : () {
+                    controller.calculateExpression(expression: controller.expressionInputController.text);
                   },
-                  title: 'Calculate',
-                  buttonColor: AppColors.accent,
-                  textColor: AppColors.white,
-                  borderRadius: 10.px,
-                  verticalPadding: 12.px,
+                  child: Text('Calculate'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.accent,
+                    foregroundColor: AppColors.white,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.px)),
+                    padding: EdgeInsets.symmetric(vertical: 12.px),
+                  ),
                 )),
               ),
             ],
@@ -148,8 +155,8 @@ class DeepSeekMathView extends StatelessWidget {
     );
   }
 
-  Widget _buildMathCategories(DeepSeekMathController controller) {
-    return ModernCard(
+  Widget _buildMathCategories(DeepseekMathController controller) {
+    return Card(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -205,9 +212,9 @@ class DeepSeekMathView extends StatelessWidget {
     );
   }
 
-  Widget _buildMathSolution(DeepSeekMathController controller) {
+  Widget _buildMathSolution(DeepseekMathController controller) {
     return Obx(() => controller.mathSolution.value.isNotEmpty
-        ? ModernCard(
+        ? Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -286,9 +293,9 @@ class DeepSeekMathView extends StatelessWidget {
         : SizedBox.shrink());
   }
 
-  Widget _buildSolutionSteps(DeepSeekMathController controller) {
+  Widget _buildSolutionSteps(DeepseekMathController controller) {
     return Obx(() => controller.solutionSteps.isNotEmpty
-        ? ModernCard(
+        ? Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -358,9 +365,9 @@ class DeepSeekMathView extends StatelessWidget {
         : SizedBox.shrink());
   }
 
-  Widget _buildAlternativeMethods(DeepSeekMathController controller) {
+  Widget _buildAlternativeMethods(DeepseekMathController controller) {
     return Obx(() => controller.alternativeMethods.isNotEmpty
-        ? ModernCard(
+        ? Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -411,9 +418,9 @@ class DeepSeekMathView extends StatelessWidget {
         : SizedBox.shrink());
   }
 
-  Widget _buildRelatedConcepts(DeepSeekMathController controller) {
+  Widget _buildRelatedConcepts(DeepseekMathController controller) {
     return Obx(() => controller.relatedConcepts.isNotEmpty
-        ? ModernCard(
+        ? Card(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

@@ -56,15 +56,18 @@ class Constants {
 
   static const String comingSoon = "Coming Soon";
 
-  // static const String baseUrl = "https://aichatsy.com/aichatsy_4_1/api/";
-  static const String baseUrl = "https://aichatsy.com/aichatsy_5/api/";
-  // static const String baseUrl = "https://hexanetwork.in/aichatsy_4_1/api/";
+  // Original developers' backend (restored)
+  static const String baseUrl = "https://aichatsy.com/aichatsy_5/public/api";
+  static const String loginUrl = "$baseUrl/user/login.php";
+  static const String registerUrl = "$baseUrl/user/register.php";
+  static const String sendMessageUrl = "$baseUrl/chat/send.php";
+  static const String chatHistoryUrl = "$baseUrl/chat/history.php";
+  static const String getAllUsersUrl = "$baseUrl/users/all.php";
+  static const String healthUrl = "$baseUrl/health.json";
+  static const String deviceLoginUrl = "$baseUrl/user/device-login.php";
 
-  static const String imageBaseUrl =
-      "https://aichatsy.com/aichatsy_4_1/public/";
-  // static const String imageBaseUrl = "https://hexanetwork.in/aichatsy_4_1/public/";
-
-  // static const String baseUrl = "https://hjgvx9vb-80.inc1.devtunnels.ms/aichatsy_7_backend/api/";
+  // Firebase Storage for images
+  static const String imageBaseUrl = "https://ai-chatsy-390411.firebasestorage.app";
   static const String apiKey = 'YOUR_BACKEND_API_KEY_HERE';
   static const String gptURL = 'https://api.openai.com/v1/chat/completions';
 
@@ -79,6 +82,7 @@ class Constants {
   static String youtubeKey = ApiKeys.youtubeApiKey;
   static String weatherKey = ApiKeys.weatherApiKey;
   static String deepSeekApiKey = ApiKeys.deepSeekApiKey;
+  static String tavilyApiKey = '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';
   
   // DeepSeek Configuration
   static const String deepSeekBaseUrl = 'https://api.deepseek.com/v1';

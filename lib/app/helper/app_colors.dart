@@ -117,4 +117,14 @@ class AppColors {
 
   Color pp = isLight ? const Color(0xff6F6F6F) : AppColors.white;
   Color pb = isLight ? const Color(0xffffffff) : AppColors.black;
+  
+  // Missing properties for compatibility
+  Color get primaryColor => primary;
+  Color get textColor => darkAndWhite;
+  Color get hintColor => grey1;
+  Color get successColor => success;
+  Color get iconColor => grey1;
+  Color get cardColor => whiteLightBlack;
+  Color get borderColor => borderColor2;
+  Color get backgroundColor => bgColor;
 }

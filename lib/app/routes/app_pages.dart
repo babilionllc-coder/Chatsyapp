@@ -91,6 +91,22 @@ import '../modules/whatsNew/bindings/whats_new_binding.dart';
 import '../modules/whatsNew/views/whats_new_view.dart';
 import '../modules/youtubeSummary/bindings/youtube_summary_binding.dart';
 import '../modules/youtubeSummary/views/youtube_summary_view.dart';
+import '../modules/deepSeekCoder/bindings/deepseek_coder_binding.dart';
+import '../modules/deepSeekCoder/views/deepseek_coder_view.dart';
+import '../modules/deepSeekMath/bindings/deepseek_math_binding.dart';
+import '../modules/deepSeekMath/views/deepseek_math_view.dart';
+import '../modules/deepSeekReasoning/bindings/deepseek_reasoning_binding.dart';
+import '../modules/deepSeekReasoning/views/deepseek_reasoning_view.dart';
+import '../modules/aiAgent/bindings/ai_agent_binding.dart';
+import '../modules/aiAgent/views/ai_agent_view.dart';
+import '../modules/deploymentAI/bindings/deployment_ai_binding.dart';
+import '../modules/deploymentAI/views/deployment_ai_view.dart';
+import '../modules/qaAgent/bindings/qa_agent_binding.dart';
+import '../modules/qaAgent/views/qa_agent_view.dart';
+import '../modules/codeReviewAgent/bindings/code_review_agent_binding.dart';
+import '../modules/codeReviewAgent/views/code_review_agent_view.dart';
+import '../modules/tutorial/bindings/tutorial_binding.dart';
+import '../modules/tutorial/views/tutorial_view.dart';
 
 part 'app_routes.dart';
 
@@ -298,6 +314,31 @@ class AppPages {
       name: _Paths.CREATE_AI_ASSISTANT,
       page: () => const CreateAiAssistantView(),
       binding: CreateAiAssistantBinding(),
+    ),
+    GetPage(
+      name: _Paths.AI_AGENT,
+      page: () => const AiAgentView(),
+      binding: AiAgentBinding(),
+    ),
+    GetPage(
+      name: _Paths.DEPLOYMENT_AI,
+      page: () => const DeploymentAiView(),
+      binding: DeploymentAiBinding(),
+    ),
+    GetPage(
+      name: _Paths.QA_AGENT,
+      page: () => const QaAgentView(),
+      binding: QaAgentBinding(),
+    ),
+    GetPage(
+      name: _Paths.TUTORIAL,
+      page: () => const TutorialView(),
+      binding: TutorialBinding(),
+    ),
+    GetPage(
+      name: _Paths.CODE_REVIEW_AGENT,
+      page: () => const CodeReviewAgentView(),
+      binding: CodeReviewAgentBinding(),
     ),
   ];
 }

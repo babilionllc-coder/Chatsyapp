@@ -12,6 +12,9 @@ import 'app_colors.dart' as appColor;
 class GetStorageData {
   String palm = "palm";
   String token = "token";
+  String gpt5Turbo = "gpt5_turbo";
+  String gpt5Pro = "gpt5_pro";
+  String gpt5Max = "gpt5_max";
   String gpt4o = "gpt4o";
   String email = "email";
   String userId = "userId";
@@ -50,6 +53,7 @@ class GetStorageData {
   String historyList = "history_list";
   String suggestionView = "suggestion_view";
   String elevenLabId = "eleven_lab_id";
+  String realTimeWeb = "real_time_web";
 
   saveSend({required bool value}) {
     final box = GetStorage();
@@ -209,6 +213,9 @@ class GetStorageData {
     await Future.wait([
       box.remove(palm),
       box.remove(token),
+      box.remove(gpt5Turbo),
+      box.remove(gpt5Pro),
+      box.remove(gpt5Max),
       box.remove(gpt4o),
       box.remove(email),
       box.remove(userId),
@@ -250,5 +257,20 @@ class GetStorageData {
     } else {
       appColor.isLight = false;
     }
+  }
+
+  // Additional storage methods for missing functionality
+  List<String>? readStringList(String key) {
+    if (containKey(key)) {
+      final box = GetStorage();
+      var result = box.read(key);
+      return result != null ? List<String>.from(result) : [];
+    }
+    return [];
+  }
+
+  Future<void> saveStringList(String key, List<String> value) async {
+    final box = GetStorage();
+    return box.write(key, value);
   }
 }

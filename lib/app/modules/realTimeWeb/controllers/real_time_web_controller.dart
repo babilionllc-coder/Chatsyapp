@@ -38,7 +38,7 @@ class RealTimeWebController extends GetxController {
   
   void _initializeRealTimeWeb() {
     printAction("🌐 Real-time Web: Initializing enhanced search functionality...");
-    _loadTrendingTopics();
+    // _loadTrendingTopics(); // Commented out until method is implemented
     _loadSearchHistory();
     printAction("✅ Real-time Web: Ready for real-time search with Tavily");
   }
@@ -147,7 +147,7 @@ class RealTimeWebController extends GetxController {
     } catch (e) {
       printAction("❌ Real-time Web: Error performing search - $e");
       searchStatus.value = "Search failed: $e";
-      utils.showSnackBar("Search failed: $e");
+      utils.showToast(message: "Search failed: $e");
     } finally {
       isLoading.value = false;
     }
@@ -303,7 +303,7 @@ class RealTimeWebController extends GetxController {
     if (searchQuery.value.isNotEmpty) {
       await performRealTimeSearch(searchQuery.value);
     } else {
-      await loadTrendingTopics();
+      // await loadTrendingTopics(); // Commented out until method is implemented
     }
   }
   

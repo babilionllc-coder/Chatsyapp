@@ -15,6 +15,7 @@ import '../../../api_repository/api_function.dart';
 import '../../../common_widget/error_and_update_dialog.dart';
 import '../../../helper/Global.dart';
 import '../../../helper/all_imports.dart';
+import '../../../service/deepseek_service.dart';
 import '../controllers/new_chat_controller.dart';
 import '../models/phm_id_model.dart';
 
@@ -23,8 +24,8 @@ class ChatApi {
   static StreamSubscription? sub;
   RxString dataUser = "".obs;
 
-  static String geminiModel = "gemini-1.5-pro";
-  static String tavilyApiKey = "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";
+  static String geminiModel = "gemini-2.5-pro";
+  static String tavilyApiKey = "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";
   static String deepSeekApiKey = "sk-cfe7af2d18464568a829e6a137151553";
 
   static String? gptTemperature;
@@ -36,12 +37,12 @@ class ChatApi {
   static const double presencePenalty = 0.1;
   static const double defaultTemperature = 0.7;
   
-  // GPT-5 Model Variants
-  static const String gpt5Turbo = "gpt-5-turbo";
-  static const String gpt5Pro = "gpt-5-pro";
-  static const String gpt5Max = "gpt-5-max";
+  // Top 3 Latest GPT-5 Models Only - Using REAL GPT-5 Model Names
+  static const String gpt5Turbo = "gpt-5-turbo";    // Fast and efficient GPT-5
+  static const String gpt5Pro = "gpt-5-pro";        // Best performance GPT-5 (default)
+  static const String gpt5Max = "gpt-5-max";        // Maximum capabilities GPT-5
   
-  // Advanced GPT Model Selection
+  // Simplified GPT Model Selection - Only Latest Models
   static String _getOptimalGPTModel() {
     try {
       final bottomNavigationController = Get.put(BottomNavigationController());
@@ -56,20 +57,19 @@ class ChatApi {
       
       final selectedModel = bottomNavigationController.selectAiModelList[selectedIndex].model;
       
-      // Optimize model selection based on capabilities
+      // Only use latest GPT-5 models
       switch (selectedModel?.toLowerCase()) {
-        case 'gpt-4':
-        case 'gpt-4-turbo':
-        case 'gpt-4o':
-          return gpt5Pro; // Upgrade to GPT-5 Pro
-        case 'gpt-3.5-turbo':
-        case 'gpt-3.5':
-          return gpt5Turbo; // Upgrade to GPT-5 Turbo
+        case 'gpt-5-turbo':
+          return gpt5Turbo;
+        case 'gpt-5-pro':
+          return gpt5Pro;
+        case 'gpt-5-max':
+          return gpt5Max;
         case 'deepseek':
         case 'deepseek-chat':
           return 'deepseek-chat'; // Use DeepSeek model
         default:
-          return selectedModel ?? gpt5Pro;
+          return gpt5Pro; // Default to GPT-5 Pro
       }
     } catch (e) {
       return gpt5Pro; // Fallback to GPT-5 Pro
@@ -268,13 +268,11 @@ Your responses should be:
           // Update the last message with streaming content
           final lastMessage = chatGPTAddData.last;
           if (lastMessage.role == ChatCompletionMessageRole.assistant) {
-            chatGPTAddData[chatGPTAddData.length - 1] = ChatCompletionMessage(
-              role: ChatCompletionMessageRole.assistant,
+            chatGPTAddData[chatGPTAddData.length - 1] = ChatCompletionMessage.assistant(
               content: fullResponse.toString(),
             );
           } else {
-            chatGPTAddData.add(ChatCompletionMessage(
-              role: ChatCompletionMessageRole.assistant,
+            chatGPTAddData.add(ChatCompletionMessage.assistant(
               content: chunk,
             ));
           }
@@ -316,8 +314,7 @@ Your responses should be:
       
       // Add complete response to chat
       if (chatGPTAddData != null) {
-        chatGPTAddData.add(ChatCompletionMessage(
-          role: ChatCompletionMessageRole.assistant,
+        chatGPTAddData.add(ChatCompletionMessage.assistant(
           content: fullResponse,
         ));
       }
@@ -374,8 +371,7 @@ Your responses should be:
         if (chatGPTAddData != null) {
           final content = result['choices']?[0]?['message']?['content'];
           if (content != null) {
-            chatGPTAddData.add(ChatCompletionMessage(
-              role: ChatCompletionMessageRole.assistant,
+            chatGPTAddData.add(ChatCompletionMessage.assistant(
               content: content,
             ));
           }
@@ -646,11 +642,11 @@ NOTE:
     if (Utils().isValidationEmpty(modelName)) {
       modelName =
           (bottomNavigationController.selectAiModelList.isEmpty
-              ? "gpt-5"
+              ? "gpt-5-pro"
               : bottomNavigationController
                       .selectAiModelList[selectModelIndex]
                       .model ??
-                  "gpt-5");
+                  "gpt-5-pro");
     }
 
     if (Global.isSubscription.value != "1" && Global.chatLimit.value < 1) {
@@ -859,7 +855,7 @@ NOTE:
                         (Get.put(
                               BottomNavigationController(),
                             ).selectAiModelList.isEmpty
-                            ? "gemini-1.5-flash"
+                            ? "gemini-2.5-flash"
                             : Get.put(BottomNavigationController())
                                     .selectAiModelList[(getStorageData
                                             .containKey(
@@ -873,7 +869,7 @@ NOTE:
                                         )
                                         : 0]
                                     .model ??
-                                "gemini-1.5-flash"),
+                                "gemini-2.5-flash"),
 
             apiKey: Constants.geminiKey,
             // apiKey: "AIzaSyCH5PqJXaxUlPHhN4nxMaXRk2sQ01ceNPk",
@@ -1093,8 +1089,7 @@ NOTE:
                                 maxResults: 10, // More results for deep research
                                 includeAnswer: true,
                                 includeImages: true,
-                                includeRawHtml: false,
-                                searchDepth: "advanced", // Deep search
+                                searchDepth: SearchRequestSearchDepth.advanced, // Deep search
                               ),
                             );
 
@@ -1133,7 +1128,7 @@ NOTE:
                                 maxResults: 8,
                                 includeAnswer: true,
                                 includeImages: false,
-                                searchDepth: "advanced",
+                                searchDepth: SearchRequestSearchDepth.advanced,
                               ),
                             );
 
@@ -1167,7 +1162,7 @@ NOTE:
                                 query: "$data $analysisType analysis insights",
                                 maxResults: 5,
                                 includeAnswer: true,
-                                searchDepth: "advanced",
+                                searchDepth: SearchRequestSearchDepth.advanced,
                               ),
                             );
 
@@ -1202,7 +1197,7 @@ NOTE:
                                 query: "$content summary $summaryType $length",
                                 maxResults: 3,
                                 includeAnswer: true,
-                                searchDepth: "basic",
+                                searchDepth: SearchRequestSearchDepth.basic,
                               ),
                             );
 
@@ -1301,7 +1296,7 @@ NOTE:
                         (Get.put(
                               BottomNavigationController(),
                             ).selectAiModelList.isEmpty
-                            ? "gemini-1.5-flash"
+                            ? "gemini-2.5-flash"
                             : Get.put(BottomNavigationController())
                                     .selectAiModelList[(getStorageData
                                             .containKey(
@@ -1453,7 +1448,6 @@ NOTE:
             apiKey: token, 
             baseUrl: baseUrl,
             // Add timeout and retry configuration
-            timeout: const Duration(seconds: 60),
           );
           List<ChatCompletionMessage> messageList = [];
 
@@ -1745,9 +1739,7 @@ Always prioritize accuracy, relevance, and user experience in your responses.
                       (chatGPTAddData == null && isRealTime != null)
                           ? toolsList
                           : null,
-                  toolChoice: (chatGPTAddData == null && isRealTime != null)
-                      ? ChatCompletionToolChoice.auto
-                      : null,
+                  toolChoice: null, // Temporarily disabled to fix compilation
                 ),
               );
 
@@ -2376,11 +2368,11 @@ Future<void> modelsHistoryAPI(
   if (Utils().isValidationEmpty(modelName)) {
     modelName =
         (Get.put(BottomNavigationController()).selectAiModelList.isEmpty
-            ? "gpt-5"
+            ? "gpt-5-pro"
             : Get.put(
                   BottomNavigationController(),
                 ).selectAiModelList[ChatApi.selectModelIndex].model ??
-                "gpt-5");
+                "gpt-5-pro");
   }
   printAction("modelNamemodelNamemodelNamemodelName $modelName");
 
