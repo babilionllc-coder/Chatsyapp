@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:chatsy/app/helper/all_imports.dart';
 import 'package:chatsy/app/helper/image_path.dart';
 // import 'package:video_player/video_player.dart'; // Removed video player functionality

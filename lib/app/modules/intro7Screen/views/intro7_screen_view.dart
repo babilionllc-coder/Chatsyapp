@@ -43,51 +43,53 @@ class Intro7ScreenView extends GetView<Intro7ScreenController> {
                           SizedBox(
                             height: (MediaQuery.of(context).size.width - 20.px),
                             width: MediaQuery.of(context).size.width,
-                            child:
-                                (controller.videoController != null &&
-                                        controller.videoController!.value.isInitialized &&
-                                        controller.value.value != 0)
-                                    ? Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20.px),
-                                      ),
-                                      child: SquareProgressIndicator(
-                                        value: controller.value.value,
-                                        width: 100,
-                                        height: 100,
-                                        borderRadius: 20,
-                                        strokeCap: StrokeCap.butt,
-                                        color: AppColors.transparent,
-                                        strokeWidth: 10,
-                                        emptyStrokeWidth: 1,
-                                        strokeAlign: SquareStrokeAlign.center,
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.circular(20.px),
-                                          child: VisibilityDetector(
-                                            key: ObjectKey(controller.videoController ?? "0"),
-                                            onVisibilityChanged: (visibilityInfo) {
-                                              // if (visibilityInfo.visibleFraction > 0.5) {
-                                              //   if ((controller.videoController?.value.position.inSeconds ?? 0) <= 1) {
-                                              //     controller.videoInitialize();
-                                              //   } else {
-                                              //     controller.videoController?.play();
-                                              //   }
-                                              //   debugPrint("controller.videoController?.play");
-                                              // } else if (visibilityInfo.visibleFraction < 0.5) {
-                                              //   if ((controller.videoController?.value.position.inSeconds ?? 0) <= 1) {
-                                              //     controller.videoController = null;
-                                              //   } else {
-                                              //     controller.videoController?.pause();
-                                              //   }
-                                              //   debugPrint("controller.videoController?.pause");
-                                              // }
-                                            },
-                                            child: VideoPlayer(controller.videoController!),
-                                          ),
-                                        ),
-                                      ).paddingAll(5.px),
-                                    )
-                                    : progressIndicatorView(),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20.px),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.primary.withOpacity(0.1),
+                                    AppColors.primary.withOpacity(0.3),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.play_circle_filled,
+                                      size: 80.px,
+                                      color: AppColors.primary,
+                                    ),
+                                    SizedBox(height: 20.px),
+                                    AppText(
+                                      "Sleek & Fast Experience",
+                                      fontSize: 18.px,
+                                      fontFamily: FontFamily.helveticaBold,
+                                      color: AppColors().darkAndWhite,
+                                    ),
+                                    SizedBox(height: 10.px),
+                                    AppText(
+                                      "Optimized for speed and performance",
+                                      fontSize: 14.px,
+                                      color: AppColors().darkAndWhite.withOpacity(0.7),
+                                    ),
+                                    SizedBox(height: 30.px),
+                                    SquareProgressIndicator(
+                                      value: controller.value.value,
+                                      width: 100,
+                                      height: 100,
+                                      borderRadius: 20,
+                                      strokeCap: StrokeCap.butt,
+                                      color: AppColors.primary,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                             /*child: Container(
                               decoration: BoxDecoration(borderRadius: BorderRadius.circular(20.px), color: AppColors.white.changeOpacity(0.3).changeOpacity(0.5)),
                             ),*/
@@ -182,22 +184,11 @@ class Intro7ScreenView extends GetView<Intro7ScreenController> {
                     SizedBox(height: MediaQuery.of(context).size.height * 0.04),
                     introCommonButton(
                       onTap: () {
-                        if ((controller.videoController?.value.position.inSeconds ?? 0) <= 1) {
-                          controller.videoController?.dispose();
-                        } else {
-                          controller.videoController?.pause();
-                        }
+                        // Video functionality removed - proceed directly
                         Get.toNamed(
                           Routes.INTRO2_SCREEN,
                           arguments: {"data": controller.getIntroData},
-                        )!.then((val) {
-                          if ((controller.videoController?.value.position.inSeconds ?? 0) <= 1) {
-                            controller.videoInitialize();
-                          } else {
-                            debugPrint("asoubajkbkb");
-                            controller.videoController?.play();
-                          }
-                        });
+                        );
                       },
                       currentIndex: 1,
                     ),
