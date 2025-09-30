@@ -1963,7 +1963,7 @@ packages:
     source: hosted
     version: "2.5.5"
   sqflite_darwin:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: sqflite_darwin
       sha256: "279832e5cde3fe99e8571879498c9211f3ca6391b0d818df4e17d9fff5c6ccb3"
