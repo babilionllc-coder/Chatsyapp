@@ -58,7 +58,7 @@ dependencies:
   # pull_to_refresh: ^2.0.0
   permission_handler: ^12.0.0+1
   carousel_slider: ^5.0.0
-  chewie: ^1.7.4  # Alternative video player that's more stable
+  # chewie: ^1.7.4  # Removed video player functionality
   provider: ^6.1.1
   visibility_detector:
   universal_html: ^2.2.4
@@ -70,7 +70,7 @@ dependencies:
   connectivity_plus: ^6.0.5
   openai_dart: ^0.4.3
   google_sign_in: ^6.2.1
-  the_apple_sign_in: ^1.1.1
+  # the_apple_sign_in: ^1.1.1  # Removed due to missing header files in Xcode Cloud
   flutter_local_notifications: ^19.1.0
   app_tracking_transparency: ^2.0.6+1
   just_audio: ^0.10.0

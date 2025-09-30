@@ -8,7 +8,7 @@ import 'package:chatsy/app/modules/purchase/views/purchase_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart' hide AuthorizationStatus;
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:the_apple_sign_in/the_apple_sign_in.dart';
+// import 'package:the_apple_sign_in/the_apple_sign_in.dart'; // Removed due to missing header files
 
 import '../../../api_repository/api_function.dart';
 import '../../../api_repository/loading.dart';
@@ -69,52 +69,11 @@ class SocialScreenController extends GetxController {
     return null;
   }
 
+  // Apple Sign In function removed due to missing header files in Xcode Cloud
   Future<String> signInWithApple() async {
-    final AuthorizationResult result = await TheAppleSignIn.performRequests([
-      const AppleIdRequest(requestedScopes: [Scope.email, Scope.fullName]),
-    ]);
-    switch (result.status) {
-      case AuthorizationStatus.authorized:
-        if (result.credential?.fullName?.familyName != null &&
-            result.credential?.fullName?.familyName != "null") {
-          // googleFirstName = result.credential!.fullName!.familyName!.split(" ").first.toString().trim();
-        }
-        if (result.credential!.fullName!.givenName != null &&
-            result.credential!.fullName!.givenName != "null") {
-          userName.value =
-              "${result.credential!.fullName!.familyName!.split(" ").first.toString().trim()} ${result.credential!.fullName!.givenName!.split(" ").first.toString().trim()}";
-        }
-        if (result.credential!.user != null && result.credential!.user != "null") {
-          appleId.value = result.credential!.user!.toString().trim();
-        }
-        if (result.credential!.email != null && result.credential!.email != "null") {
-          userEmail.value = result.credential!.email!.toString().trim();
-        }
-
-        if (userName.isNotEmpty) {
-          // firstNameController.text = userName.split(" ")[0];
-          // lastNameController.text = userName.split(" ")[1];
-        }
-
-        SocialLoginModel socialLoginModel = SocialLoginModel(
-          emailID: userEmail.value,
-          name: userName.value,
-          isGoogle: 0,
-          isApple: 1,
-          googleId: "",
-          appleId: result.credential!.user.toString(),
-        );
-        register(socialLoginModel: socialLoginModel);
-
-        break; //All the required credentials
-      case AuthorizationStatus.error:
-        debugPrint("Sign in failed: ${result.error!.localizedDescription}");
-        break;
-      case AuthorizationStatus.cancelled:
-        debugPrint('User cancelled');
-        break;
-    }
-
+    // Apple Sign In functionality temporarily disabled
+    // TODO: Re-implement with alternative Apple Sign In solution
+    debugPrint('Apple Sign In temporarily disabled');
     return "";
   }
 

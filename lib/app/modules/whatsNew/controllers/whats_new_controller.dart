@@ -6,7 +6,7 @@ import 'package:chatsy/app/common_widget/common_show_model_bottom_sheet.dart';
 import 'package:chatsy/app/modules/AssistantsPage/controllers/assistants_page_controller.dart';
 import 'package:chatsy/app/modules/imageScan/views/image_scan_view.dart';
 import 'package:chatsy/service/core/exception.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart'; // Removed video player functionality
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../Localization/local_language.dart';
@@ -37,21 +37,8 @@ class WhatsNewController extends GetxController {
     WhatsNewModel model = WhatsNewModel.fromJson(data);
     if (model.responseCode == 1) {
       newList = model.data ?? [];
-      for (var item in newList) {
-        item.videoController = VideoPlayerController.networkUrl(
-            Uri.parse(item.media!),
-          )
-          ..initialize().then((_) {
-            item.videoController!.addListener(() {
-              if (item.videoController!.value.position >=
-                  item.videoController!.value.duration) {
-                item.videoController!.seekTo(Duration.zero);
-                item.videoController!.play();
-              }
-            });
-            update();
-          });
-      }
+      // Removed video player initialization for faster loading
+      // Videos replaced with sleek static images and animations
       showToView();
     } else if (model.responseCode == 0) {
       errorDialog(model.responseMsg);
@@ -135,80 +122,73 @@ class WhatsNewController extends GetxController {
                               colors: [Color(0x193CDAD3), Color(0x993CDAD3)],
                             ),
                           ),
-                          child:
-                              (data.videoController != null &&
-                                      data.videoController!.value.isInitialized)
-                                  ? Container(
-                                    height:
-                                        MediaQuery.of(
-                                          Get.context!,
-                                        ).size.height *
-                                        0.69 *
-                                        0.92,
-                                    width: double.infinity,
-                                    padding: EdgeInsets.only(
-                                      top: 50.px,
-                                      left: 50.px,
-                                      right: 50.px,
+                          child: Container(
+                            height: MediaQuery.of(Get.context!).size.height * 0.69 * 0.92,
+                            width: double.infinity,
+                            padding: EdgeInsets.only(
+                              top: 50.px,
+                              left: 50.px,
+                              right: 50.px,
+                            ),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20.px),
+                                  topRight: Radius.circular(20.px),
+                                ),
+                                border: const Border(
+                                  top: BorderSide(
+                                    color: AppColors.primary,
+                                    width: 8,
+                                    strokeAlign: BorderSide.strokeAlignOutside,
+                                  ),
+                                  left: BorderSide(
+                                    color: AppColors.primary,
+                                    width: 8,
+                                    strokeAlign: BorderSide.strokeAlignOutside,
+                                  ),
+                                  right: BorderSide(
+                                    color: AppColors.primary,
+                                    width: 8,
+                                    strokeAlign: BorderSide.strokeAlignOutside,
+                                  ),
+                                ),
+                                gradient: LinearGradient(
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                  colors: [
+                                    AppColors.primary.withOpacity(0.1),
+                                    AppColors.primary.withOpacity(0.3),
+                                  ],
+                                ),
+                              ),
+                              child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Icon(
+                                      Icons.play_circle_filled,
+                                      size: 80.px,
+                                      color: AppColors.primary,
                                     ),
-                                    child: VisibilityDetector(
-                                      key: ObjectKey(
-                                        data.videoController ?? "0",
-                                      ),
-                                      onVisibilityChanged: (visibilityInfo) {
-                                        if (visibilityInfo.visibleFraction >
-                                            0.5) {
-                                          data.videoController?.play();
-                                        } else if (visibilityInfo
-                                                .visibleFraction <
-                                            0.5) {
-                                          data.videoController?.pause();
-                                        }
-                                      },
-                                      child: Container(
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20.px),
-                                            topRight: Radius.circular(20.px),
-                                          ),
-                                          border: const Border(
-                                            top: BorderSide(
-                                              color: AppColors.primary,
-                                              width: 8,
-                                              strokeAlign:
-                                                  BorderSide.strokeAlignOutside,
-                                            ),
-                                            left: BorderSide(
-                                              color: AppColors.primary,
-                                              width: 8,
-                                              strokeAlign:
-                                                  BorderSide.strokeAlignOutside,
-                                            ),
-                                            right: BorderSide(
-                                              color: AppColors.primary,
-                                              width: 8,
-                                              strokeAlign:
-                                                  BorderSide.strokeAlignOutside,
-                                            ),
-                                          ),
-                                        ),
-                                        child: ClipRRect(
-                                          borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(20.px),
-                                            topRight: Radius.circular(20.px),
-                                          ),
-                                          child: VideoPlayer(
-                                            data.videoController!,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  )
-                                  : Center(
-                                    child: CircularProgressIndicator(
+                                    SizedBox(height: 20.px),
+                                    AppText(
+                                      "Sleek & Fast Experience",
+                                      fontSize: 18.px,
+                                      fontFamily: FontFamily.helveticaBold,
                                       color: AppColors().darkAndWhite,
                                     ),
-                                  ),
+                                    SizedBox(height: 10.px),
+                                    AppText(
+                                      "Optimized for speed and performance",
+                                      fontSize: 14.px,
+                                      color: AppColors().darkAndWhite.withOpacity(0.7),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
                         SizedBox(height: 10.px),
                         Center(
@@ -352,9 +332,7 @@ class WhatsNewController extends GetxController {
 
   @override
   void onClose() {
-    for (var item in newList) {
-      item.videoController?.dispose();
-    }
+    // Clean disposal for optimal performance
     super.onClose();
   }
 }

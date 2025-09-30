@@ -1,36 +1,27 @@
 import 'package:chatsy/app/helper/all_imports.dart';
 import 'package:chatsy/app/helper/image_path.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart'; // Removed video player functionality
 
 import '../../intro1Screen/models/get_intro_details_model.dart';
 
 class Intro7ScreenController extends GetxController with GetSingleTickerProviderStateMixin {
-  VideoPlayerController? videoController;
+  // VideoPlayerController? videoController; // Removed video player functionality
 
   RxDouble value = 0.0.obs;
+  RxBool isAnimating = false.obs;
 
-  videoInitialize() {
-    // videoController = VideoPlayerController.networkUrl(Uri.parse(getIntroData.videoLink ?? "${Constants.imageBaseUrl}images/video_intro.mp4"))
-    videoController = VideoPlayerController.asset(ImagePath.introViewVideo)
-      ..initialize().then((_) {
-        videoController?.play();
-
-        if (videoController != null) {
-          videoController?.addListener(() {
-            if (videoController != null) {
-              value.value =
-                  (videoController!.value.position.inSeconds /
-                      videoController!.value.duration.inSeconds);
-              printAction("value.value ${value.value}");
-              if (videoController!.value.position >= videoController!.value.duration) {
-                videoController!.seekTo(Duration.zero);
-                videoController!.play();
-              }
-            }
-          });
-        }
-        update();
-      });
+  // Replaced video with smooth animation for better UX
+  animationInitialize() {
+    isAnimating.value = true;
+    // Simulate progress animation instead of video progress
+    Timer.periodic(Duration(milliseconds: 100), (timer) {
+      if (value.value < 1.0) {
+        value.value += 0.01;
+      } else {
+        value.value = 0.0; // Loop animation
+      }
+      update();
+    });
   }
 
   GetIntroData getIntroData = GetIntroData();
@@ -42,31 +33,22 @@ class Intro7ScreenController extends GetxController with GetSingleTickerProvider
       // if (LottieCacheInApp.instance.getLottie('problemSolvingTasks') == null) {
       //   await LottieCacheInApp.instance.preloadLottie(getIntroData.problemSolvingTasks ?? "", 'problemSolvingTasks');
       // }
-      videoInitialize();
+      animationInitialize();
     } else {
-      videoInitialize();
+      animationInitialize();
     }
 
     super.onInit();
   }
 
-  disposeVideoController() {
-    printAction("=========== disposeVideoController ============");
-    if (videoController != null) {
-      videoController!.dispose();
-    }
-  }
-
   @override
   void dispose() {
-    disposeVideoController();
+    // Clean disposal for smooth performance
     super.dispose();
   }
 
   @override
   void onClose() {
-    disposeVideoController();
-
     super.onClose();
   }
 }

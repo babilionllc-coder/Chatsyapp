@@ -1,4 +1,4 @@
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart'; // Removed video player functionality
 
 class WhatsNewModel {
   final List<WhatsNewData>? data;
@@ -26,7 +26,7 @@ class WhatsNewModel {
 }
 
 class WhatsNewData {
-  VideoPlayerController? videoController;
+  // VideoPlayerController? videoController; // Removed video player functionality
   final String? whatsNewId;
   final String? title;
   final String? description;

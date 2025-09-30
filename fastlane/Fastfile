@@ -1,0 +1,29 @@
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to App Store Connect"
+  lane :release do
+    # Build the app
+    build_app(
+      workspace: "ios/Runner.xcworkspace",
+      scheme: "Runner",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        teamID: "GSN7D3JM6T",
+        signingStyle: "manual",
+        signingCertificate: "Apple Distribution: Babilion LLC (GSN7D3JM6T)",
+        provisioningProfiles: {
+          "com.aichatsy.app" => "Aichatsy Production New"
+        }
+      }
+    )
+    
+    # Upload to App Store Connect
+    upload_to_app_store(
+      force: true,
+      skip_metadata: true,
+      skip_screenshots: true
+    )
+  end
+end

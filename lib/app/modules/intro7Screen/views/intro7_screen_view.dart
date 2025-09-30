@@ -4,7 +4,7 @@ import 'package:chatsy/app/modules/intro1Screen/views/intro1_screen_view.dart';
 import 'package:lottie/lottie.dart' hide LottieCache;
 import 'package:lottie/lottie.dart';
 import 'package:square_progress_indicator/square_progress_indicator.dart';
-import 'package:video_player/video_player.dart';
+// import 'package:video_player/video_player.dart'; // Removed video player functionality
 import 'package:visibility_detector/visibility_detector.dart';
 
 import '../../../helper/all_imports.dart';

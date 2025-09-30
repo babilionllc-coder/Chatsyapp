@@ -154,12 +154,15 @@ Future<void> main() async {
 
   Utils.screenPortrait();
 
-  await initPackageInfo();
-  await GetStorage.init();
+  // Initialize package info and storage in parallel for faster startup
+  await Future.wait([
+    initPackageInfo(),
+    GetStorage.init(),
+  ]);
   
-  // Initialize secure API keys
+  // Initialize secure API keys with timeout for faster startup
   try {
-    await Constants.initializeSecureKeys();
+    await Constants.initializeSecureKeys().timeout(Duration(seconds: 3));
     printAction("🔐 Main: Secure API keys initialized");
   } catch (e) {
     printAction("❌ Main: Error initializing secure API keys - $e");
