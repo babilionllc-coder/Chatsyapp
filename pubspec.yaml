@@ -99,7 +99,7 @@ dependencies:
 
 dependency_overrides:
   in_app_purchase_storekit: 0.3.22+1
-  sqflite_darwin: ^2.4.1  # Use more stable version for Xcode Cloud
+  sqflite_darwin: 2.4.1  # Force exact version for Xcode Cloud compatibility
 
 dev_dependencies:
 
